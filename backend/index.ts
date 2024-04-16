@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import config from './config';
 
 const app = express();
-const PORT = 8008;
+const PORT = 8000;
 
 app.use(cors());
 app.use(express.json());
