@@ -1,0 +1,53 @@
+import express, {Request, Response} from 'express';
+import {TrackMutation} from '../types';
+import mongoose from 'mongoose';
+import Track from '../models/Track';
+
+const tracksRouter = express.Router();
+
+tracksRouter.get('/', async (req: Request, res: Response, next) => {
+  try {
+    if (req.query.album) {
+      try {
+        const albumQueryId = req.query.album as string;
+        const tracksFromAlbum = await Track.find({album: albumQueryId});
+
+        return res.send(tracksFromAlbum);
+      } catch (e) {
+        return res.status(404).send({error: 'Wrong album ObjectId'});
+      }
+    } else {
+      const tracks = await Track.find();
+      return res.send(tracks);
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+
+tracksRouter.post('/', async (req: Request, res: Response, next) => {
+  if (!req.body.trackName || !req.body.album || !req.body.trackDuration) {
+    return res.status(400).send({error: 'Track name, album and track duration is required'});
+  }
+
+  const trackData: TrackMutation = {
+    trackName: req.body.trackName,
+    album: req.body.album,
+    trackDuration: req.body.trackDuration,
+  };
+
+  try {
+    const track = new Track(trackData);
+    await track.save();
+
+    return res.send(track);
+  } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      return res.status(422).json({error: e});
+    }
+
+    next(e);
+  }
+});
+
+export default tracksRouter;

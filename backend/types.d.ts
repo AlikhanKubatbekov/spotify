@@ -1,0 +1,18 @@
+export interface ArtistMutation {
+  name: string;
+  photo: string | null;
+  information: string;
+}
+
+export interface AlbumMutation {
+  title: string;
+  artist: string;
+  publicDate: string;
+  albumImage: string | null;
+}
+
+export interface TrackMutation {
+  trackName: string;
+  album: string;
+  trackDuration: string;
+}

@@ -7,6 +7,8 @@ const ArtistSchema = new Schema({
   },
   photo: String || null,
   information: String
+}, {
+  versionKey: false,
 });
 
 const Artist = model('Artist', ArtistSchema);

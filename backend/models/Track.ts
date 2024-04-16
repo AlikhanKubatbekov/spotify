@@ -19,6 +19,8 @@ const TrackSchema = new Schema({
     type: String,
     required: true,
   }
+}, {
+  versionKey: false,
 });
 
 const Track = model('Track', TrackSchema);
