@@ -1,10 +1,10 @@
 import {model, Schema} from 'mongoose';
 import bcrypt from 'bcrypt';
-import {UserFields} from '../types';
+import {UserFields, UserMethods, UserModel} from '../types';
 
 const SALT_WORK_FACTOR = 10;
 
-const UserSchema = new Schema<UserFields>({
+const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
   username: {
     type: String,
     required: true,
@@ -17,6 +17,10 @@ const UserSchema = new Schema<UserFields>({
 }, {
   versionKey: false,
 });
+
+UserSchema.methods.checkPassword = function (password: string) {
+  return bcrypt.compare(password, this.password);
+}
 
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
@@ -33,6 +37,6 @@ UserSchema.set('toJSON', {
   }
 });
 
-const User = model('User', UserSchema);
+const User = model<UserFields, UserModel>('User', UserSchema);
 
 export default User;

@@ -30,4 +30,24 @@ usersRouter.post('/', async (req: Request, res: Response, next) => {
   }
 });
 
+usersRouter.post('/sessions', async (req: Request, res: Response, next) => {
+  try {
+    const user = await User.findOne({username: req.body.username});
+
+    if (!user) {
+      return res.status(400).send({error: 'Username or password is wrong!'});
+    }
+
+    const isMatch = await user.checkPassword(req.body.password);
+
+    if (!isMatch) {
+      return res.status(400).send({error: 'Username or password is wrong!'});
+    }
+
+    return res.send({message: 'Username and password correct!'});
+  } catch (e) {
+    next(e);
+  }
+});
+
 export default usersRouter;
