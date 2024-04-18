@@ -16,3 +16,10 @@ export interface TrackMutation {
   album: string;
   trackDuration: string;
 }
+
+export interface UserFields {
+  username: string;
+  password: string;
+  // token: string;
+}
+
