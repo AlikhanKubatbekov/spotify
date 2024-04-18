@@ -1,6 +1,7 @@
 import {model, Schema} from 'mongoose';
 import bcrypt from 'bcrypt';
 import {UserFields, UserMethods, UserModel} from '../types';
+import {randomUUID} from 'crypto';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -13,6 +14,10 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
   password: {
     type: String,
     required: true,
+  },
+  token: {
+    type: String,
+    required: true,
   }
 }, {
   versionKey: false,
@@ -21,6 +26,10 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
 UserSchema.methods.checkPassword = function (password: string) {
   return bcrypt.compare(password, this.password);
 }
+
+UserSchema.methods.generateToken = function () {
+  this.token = randomUUID();
+};
 
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
