@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express';
+import express, {Request, Response, NextFunction} from 'express';
 import mongoose from 'mongoose';
 import {ObjectId} from 'mongodb';
 import {AlbumMutation} from '../types';
@@ -7,7 +7,7 @@ import Album from '../models/Album';
 
 const albumsRouter = express.Router();
 
-albumsRouter.get('/', async (req: Request, res: Response, next) => {
+albumsRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.query.artist) {
       try {
@@ -27,7 +27,7 @@ albumsRouter.get('/', async (req: Request, res: Response, next) => {
   }
 });
 
-albumsRouter.get('/:id', async (req: Request, res: Response, next) => {
+albumsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     let _id: ObjectId;
     try {
@@ -50,7 +50,7 @@ albumsRouter.get('/:id', async (req: Request, res: Response, next) => {
   }
 });
 
-albumsRouter.post('/', imagesUpload.single('albumImage'), async (req: Request, res: Response, next) => {
+albumsRouter.post('/', imagesUpload.single('albumImage'), async (req: Request, res: Response, next: NextFunction) => {
   if (!req.body.title || !req.body.artist || !req.body.publicDate) {
     return res.status(400).json({error: 'Title, artist and public date of album must be present in the request'});
   }

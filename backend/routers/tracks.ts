@@ -1,11 +1,11 @@
-import express, {Request, Response} from 'express';
+import express, {Request, Response, NextFunction} from 'express';
 import {TrackMutation} from '../types';
 import mongoose from 'mongoose';
 import Track from '../models/Track';
 
 const tracksRouter = express.Router();
 
-tracksRouter.get('/', async (req: Request, res: Response, next) => {
+tracksRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.query.album) {
       try {
@@ -25,12 +25,13 @@ tracksRouter.get('/', async (req: Request, res: Response, next) => {
   }
 });
 
-tracksRouter.post('/', async (req: Request, res: Response, next) => {
-  if (!req.body.trackName || !req.body.album || !req.body.trackDuration) {
-    return res.status(400).send({error: 'Track name, album and track duration is required'});
+tracksRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.body.trackNumber || !req.body.trackName || !req.body.album || !req.body.trackDuration) {
+    return res.status(400).send({error: 'Track number, name, album and track duration is required'});
   }
 
   const trackData: TrackMutation = {
+    trackNumber: req.body.trackNumber,
     trackName: req.body.trackName,
     album: req.body.album,
     trackDuration: req.body.trackDuration,

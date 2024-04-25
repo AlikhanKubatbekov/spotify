@@ -1,11 +1,11 @@
-import express, {Request, Response} from 'express';
+import express, {Request, Response, NextFunction} from 'express';
 import Artist from '../models/Artist';
 import {imagesUpload} from '../multer';
 import {ArtistMutation} from '../types';
 
 const artistsRouter = express.Router();
 
-artistsRouter.get('/', async (_req: Request, res: Response, next) => {
+artistsRouter.get('/', async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const artists = await Artist.find();
     return res.send(artists);
@@ -14,7 +14,7 @@ artistsRouter.get('/', async (_req: Request, res: Response, next) => {
   }
 });
 
-artistsRouter.post('/', imagesUpload.single('photo'), async (req: Request, res: Response, next) => {
+artistsRouter.post('/', imagesUpload.single('photo'), async (req: Request, res: Response, next: NextFunction) => {
   if (!req.body.name) {
     return res.status(400).json({error: 'Name of artist must be present in the request'});
   }

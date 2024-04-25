@@ -1,34 +1,21 @@
-import express, {Request, Response} from 'express';
+import express, {NextFunction, Response} from 'express';
 import {Error} from 'mongoose';
-import User from '../models/User';
 import TrackHistory from '../models/TrackHistory';
+import auth, {RequestWithUser} from '../middleware/auth';
 
 const trackHistoryRouter = express.Router();
 
-trackHistoryRouter.post('/', async (req: Request, res: Response, next) => {
-  if (!req.body.trackId) {
+trackHistoryRouter.post('/', auth, async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  if (!req.body.track) {
     return res.status(400).json({error: 'Track id must be present in request!'})
   }
 
   try {
-    const tokenData = req.get('Authorization');
     const datetime = new Date();
 
-    if (!tokenData) {
-      return res.status(401).send({error: 'No token present!'});
-    }
-
-    const [_, token] = tokenData.split(' ');
-
-    const user = await User.findOne({token});
-
-    if (!user) {
-      return res.status(401).send({error: 'Wrong token!'});
-    }
-
     const trackHistory = new TrackHistory({
-      user: user._id,
-      track: req.body.trackId,
+      user: req.user?._id,
+      track: req.body.track,
       datetime: datetime.toISOString(),
     });
 

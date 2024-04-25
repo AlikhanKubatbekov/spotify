@@ -2,6 +2,10 @@ import {model, Schema, Types} from 'mongoose';
 import Album from './Album';
 
 const TrackSchema = new Schema({
+  trackNumber: {
+    type: Number,
+    required: true
+  },
   trackName: {
     type: String,
     required: true,
