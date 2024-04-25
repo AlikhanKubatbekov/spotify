@@ -13,12 +13,14 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
-  Typography
+  Typography, LinearProgress
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SpotifyLogo from '../../../assets/spotifyLogo.png';
+import {selectFetchArtistsLoading} from '../../../features/artists/artistsSlice';
+import {useAppSelector} from '../../../app/hooks';
 
 const theme = createTheme();
 const drawerWidth = 300;
@@ -120,6 +122,8 @@ const drawer = (
 const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const fetchArtistLoading = useAppSelector(selectFetchArtistsLoading);
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -152,6 +156,12 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
             Log out
           </Button>
         </Toolbar>
+
+        {fetchArtistLoading && (
+          <Box style={{width: '100%'}}>
+            <LinearProgress/>
+          </Box>
+        )}
       </AppBar>
 
       <Typography

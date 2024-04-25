@@ -3,7 +3,7 @@ import {Model} from 'mongoose';
 export interface ArtistMutation {
   name: string;
   photo: string | null;
-  information: string;
+  information: string | null;
 }
 
 export interface AlbumMutation {
