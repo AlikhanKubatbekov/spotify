@@ -12,14 +12,21 @@ albumsRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
     if (req.query.artist) {
       try {
         const artistQueryId = req.query.artist as string;
-        const albumsByArtist = await Album.find({artist: artistQueryId});
+        const albumsByArtist = await Album
+          .find({artist: artistQueryId})
+          .populate('artist', 'name')
+          .populate('publicDate')
+          .sort({publicDate: -1});
 
         return res.send(albumsByArtist);
       } catch (e) {
         return res.status(404).send({error: 'Wrong artist ObjectId'});
       }
     } else {
-      const albums = await Album.find();
+      const albums = await Album
+        .find()
+        .populate('publicDate')
+        .sort({publicDate: -1});
       return res.send(albums);
     }
   } catch (e) {

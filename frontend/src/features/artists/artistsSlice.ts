@@ -33,4 +33,3 @@ export const artistsReducer = artistsSlice.reducer;
 
 export const selectArtists = (state: RootState) => state.artists.items;
 export const selectFetchArtistsLoading = (state: RootState) => state.artists.fetchLoading;
-

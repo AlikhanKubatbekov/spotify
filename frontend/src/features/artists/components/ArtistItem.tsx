@@ -9,8 +9,10 @@ import {
   Typography
 } from '@mui/material';
 import noAvatarPhoto from '../../../assets/noImageAvailable.png';
+import {Link} from 'react-router-dom';
 
 interface Props {
+  id: string;
   name: string;
   photo: string | null;
 }
@@ -33,7 +35,7 @@ const classes = {
   },
 };
 
-const ArtistItem: React.FC<Props> = ({name, photo}) => {
+const ArtistItem: React.FC<Props> = ({id, name, photo}) => {
   let cardImage = noAvatarPhoto;
 
   if (photo) {
@@ -43,7 +45,9 @@ const ArtistItem: React.FC<Props> = ({name, photo}) => {
   return (
     <Grid item xs={12} sm={6} md={3}>
       <Card
+        component={Link}
         sx={classes.card}
+        to={`/albums?artist=${id}`}
       >
         <CardActionArea>
           <CardMedia

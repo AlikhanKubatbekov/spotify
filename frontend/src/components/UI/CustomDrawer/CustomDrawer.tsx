@@ -21,6 +21,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SpotifyLogo from '../../../assets/spotifyLogo.png';
 import {selectFetchArtistsLoading} from '../../../features/artists/artistsSlice';
 import {useAppSelector} from '../../../app/hooks';
+import {selectFetchAlbumsLoading} from '../../../features/albums/albumsSlice';
 
 const theme = createTheme();
 const drawerWidth = 300;
@@ -123,6 +124,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const fetchArtistLoading = useAppSelector(selectFetchArtistsLoading);
+  const fetchAlbumsLoading = useAppSelector(selectFetchAlbumsLoading);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -158,6 +160,12 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
         </Toolbar>
 
         {fetchArtistLoading && (
+          <Box style={{width: '100%'}}>
+            <LinearProgress/>
+          </Box>
+        )}
+
+        {fetchAlbumsLoading && (
           <Box style={{width: '100%'}}>
             <LinearProgress/>
           </Box>

@@ -28,9 +28,10 @@ const Artists: React.FC = () => {
         noArtistsAvailable
       ) : (
         <Grid container spacing={4}>
-          {artists.map(artist => (
+          {artists.map((artist) => (
             <ArtistItem
               key={artist._id}
+              id={artist._id}
               name={artist.name}
               photo={artist.photo}
             />
