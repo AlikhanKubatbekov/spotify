@@ -98,37 +98,37 @@ const run = async () => {
     albumImage: 'fixtures/+domeAlbumImage.jpeg'
   });
 
-  for (const trackName of abyssTracksNames) {
+  for (let trackNumber = 0; trackNumber < abyssTracksNames.length; trackNumber++) {
     await Track.create({
-      trackNumber: Math.random(),
-      trackName: trackName,
+      trackNumber: trackNumber + 1,
+      trackName: abyssTracksNames[trackNumber],
       album: abyssAlbum,
       trackDuration: getRandomTrackDuration()
     });
   }
 
-  for (const trackName of etherealityTracksNames) {
+  for (let trackNumber = 0; trackNumber < etherealityTracksNames.length; trackNumber++) {
     await Track.create({
-      trackNumber: Math.random(),
-      trackName: trackName,
+      trackNumber: trackNumber + 1,
+      trackName: etherealityTracksNames[trackNumber],
       album: etherealityAlbum,
       trackDuration: getRandomTrackDuration()
     });
   }
 
-  for (const trackName of theWorryTracksNames) {
+  for (let trackNumber = 0; trackNumber < theWorryTracksNames.length; trackNumber++) {
     await Track.create({
-      trackNumber: Math.random(),
-      trackName: trackName,
+      trackNumber: trackNumber + 1,
+      trackName: theWorryTracksNames[trackNumber],
       album: theWorryAlbum,
       trackDuration: getRandomTrackDuration()
     });
   }
 
-  for (const trackName of domeTracksNames) {
+  for (let trackNumber = 0; trackNumber < domeTracksNames.length; trackNumber++) {
     await Track.create({
-      trackNumber: Math.random(),
-      trackName: trackName,
+      trackNumber: trackNumber + 1,
+      trackName: domeTracksNames[trackNumber],
       album: domeAlbum,
       trackDuration: getRandomTrackDuration()
     });
