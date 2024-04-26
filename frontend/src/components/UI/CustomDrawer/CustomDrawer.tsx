@@ -1,19 +1,20 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {
-  createTheme,
-  Drawer,
   AppBar,
   Box,
   Button,
+  createTheme,
   Divider,
+  Drawer,
   IconButton,
+  LinearProgress,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Toolbar,
-  Typography, LinearProgress
+  Typography
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
@@ -22,6 +23,7 @@ import SpotifyLogo from '../../../assets/spotifyLogo.png';
 import {selectFetchArtistsLoading} from '../../../features/artists/artistsSlice';
 import {useAppSelector} from '../../../app/hooks';
 import {selectFetchAlbumsLoading} from '../../../features/albums/albumsSlice';
+import {selectFetchTracksLoading} from '../../../features/tracks/tracksSlice';
 
 const theme = createTheme();
 const drawerWidth = 300;
@@ -125,6 +127,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
 
   const fetchArtistLoading = useAppSelector(selectFetchArtistsLoading);
   const fetchAlbumsLoading = useAppSelector(selectFetchAlbumsLoading);
+  const fetchTrackLoading = useAppSelector(selectFetchTracksLoading);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -166,6 +169,12 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
         )}
 
         {fetchAlbumsLoading && (
+          <Box style={{width: '100%'}}>
+            <LinearProgress/>
+          </Box>
+        )}
+
+        {fetchTrackLoading && (
           <Box style={{width: '100%'}}>
             <LinearProgress/>
           </Box>

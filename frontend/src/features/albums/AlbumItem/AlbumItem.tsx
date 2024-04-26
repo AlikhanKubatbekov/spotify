@@ -47,7 +47,7 @@ const AlbumItem: React.FC<Props> = ({id, title, publicDate, albumImage}) => {
       <Card
         component={Link}
         sx={classes.card}
-        to={`/tracks=${id}`}
+        to={`/tracks?album=${id}`}
       >
         <CardActionArea>
           <CardMedia

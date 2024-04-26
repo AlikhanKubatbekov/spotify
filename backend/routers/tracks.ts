@@ -1,7 +1,8 @@
-import express, {Request, Response, NextFunction} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import {TrackMutation} from '../types';
 import mongoose from 'mongoose';
 import Track from '../models/Track';
+import Artist from '../models/Artist';
 
 const tracksRouter = express.Router();
 
@@ -10,7 +11,16 @@ tracksRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
     if (req.query.album) {
       try {
         const albumQueryId = req.query.album as string;
-        const tracksFromAlbum = await Track.find({album: albumQueryId});
+        const tracksFromAlbum = await Track
+          .find({album: albumQueryId})
+          .populate({
+            path: 'album',
+            populate: {
+              path: 'artist',
+              model: Artist
+            }
+          })
+          .sort({trackNumber: 1});
 
         return res.send(tracksFromAlbum);
       } catch (e) {
