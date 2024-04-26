@@ -14,6 +14,7 @@ export interface Album {
 }
 
 export interface Track {
+  _id: string;
   trackNumber: number;
   trackName: string;
   album: Album;

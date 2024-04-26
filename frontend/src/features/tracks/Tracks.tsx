@@ -118,6 +118,7 @@ const Tracks: React.FC = () => {
               <List style={{width: '100%'}}>
                 {tracksByAlbum.map((track) => (
                   <ListItemButton
+                    key={track._id}
                     alignItems="flex-start"
                    >
                     <ListItemText
