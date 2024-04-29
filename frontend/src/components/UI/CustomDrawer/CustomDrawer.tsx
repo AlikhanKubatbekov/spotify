@@ -1,5 +1,10 @@
 import React, {ReactNode, useState} from 'react';
-import {Link, NavLink} from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import {useAppSelector} from '../../../app/hooks';
+import {selectFetchArtistsLoading} from '../../../features/artists/artistsSlice';
+import {selectFetchAlbumsLoading} from '../../../features/albums/albumsSlice';
+import {selectFetchTracksLoading} from '../../../features/tracks/tracksSlice';
+import {selectLoginLoading, selectRegisterLoading, selectUser} from '../../../features/users/usersSlice';
 import {
   AppBar,
   Box,
@@ -16,15 +21,12 @@ import {
   Toolbar,
   Typography
 } from '@mui/material';
+import AnonymousMenu from './AnonymousMenu';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SpotifyLogo from '../../../assets/spotifyLogo.png';
-import {selectFetchArtistsLoading} from '../../../features/artists/artistsSlice';
-import {useAppSelector} from '../../../app/hooks';
-import {selectFetchAlbumsLoading} from '../../../features/albums/albumsSlice';
-import {selectFetchTracksLoading} from '../../../features/tracks/tracksSlice';
-import {selectUser} from '../../../features/users/usersSlice';
+import {persistor} from '../../../app/store';
 
 const theme = createTheme();
 const drawerWidth = 300;
@@ -115,9 +117,10 @@ const SideDrawer: React.FC = () => {
             <ListItemButton
               component={Link}
               to="/"
+              onClick={() => persistor.purge()}
             >
               <ListItemIcon
-                sx={{
+                style={{
                   justifyContent: 'flex-end',
                   marginRight: '3px'
                 }}
@@ -156,18 +159,22 @@ export const TopNavigation: React.FC<{
           <MenuIcon/>
         </IconButton>
 
-        <Button
-          component={NavLink}
-          to="/register"
-          sx={classes.signUp}
+        <Typography
+          component="div"
+          style={{
+            marginLeft: "auto"
+          }}
         >
-          Sign Up
-        </Button>
+          {!user && (
+            <AnonymousMenu />
+          )}
+        </Typography>
 
         {user && (
           <Button
             color="inherit"
             sx={classes.logout}
+            onClick={() => persistor.purge()}
           >
             <ExitToAppIcon/>
             Log out
@@ -185,6 +192,8 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
   const fetchArtistLoading = useAppSelector(selectFetchArtistsLoading);
   const fetchAlbumsLoading = useAppSelector(selectFetchAlbumsLoading);
   const fetchTrackLoading = useAppSelector(selectFetchTracksLoading);
+  const registerLoading = useAppSelector(selectRegisterLoading);
+  const loginLoading = useAppSelector(selectLoginLoading);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -209,6 +218,18 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
         )}
 
         {fetchTrackLoading && (
+          <Box style={{width: '100%'}}>
+            <LinearProgress/>
+          </Box>
+        )}
+
+        {registerLoading && (
+          <Box style={{width: '100%'}}>
+            <LinearProgress/>
+          </Box>
+        )}
+
+        {loginLoading && (
           <Box style={{width: '100%'}}>
             <LinearProgress/>
           </Box>

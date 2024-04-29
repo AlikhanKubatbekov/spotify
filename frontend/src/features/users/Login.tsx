@@ -1,52 +1,38 @@
 import React, {useState} from 'react';
-import {Avatar, Box, Button, Container, Grid, Link, TextField, Typography} from '@mui/material';
 import {Link as RouterLink, useNavigate} from 'react-router-dom';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {RegisterMutation} from '../../types';
+import {LoginMutation} from '../../types';
+import {Alert, Avatar, Box, Button, Container, Grid, Link, TextField, Typography} from '@mui/material';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectRegisterError} from './usersSlice';
-import {register} from './usersThunk';
+import {selectLoginError} from './usersSlice';
+import {login} from './usersThunk';
 
-const Register = () => {
+const Login = () => {
   const navigate = useNavigate();
 
-  const [state, setState] = useState<RegisterMutation>({
+  const [state, setState] = useState<LoginMutation>({
     username: '',
-    password: ''
+    password: '',
   });
 
   const dispatch = useAppDispatch();
-  const error = useAppSelector(selectRegisterError);
+  const error = useAppSelector(selectLoginError);
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
-    setState(prevState => {
-      return {...prevState, [name]: value};
-    });
+    setState(prevState => ({...prevState, [name]: value}));
   };
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    await dispatch(register({
-      username: state.username.trim(),
-      password: state.password.trim()
-    })).unwrap();
+    await dispatch(login(state)).unwrap();
     navigate('/');
-  };
-
-  const getFieldError = (fieldName: string) => {
-    try {
-      return error?.errors[fieldName].message;
-    } catch {
-      return undefined;
-    }
   };
 
   return (
     <Container component="main" maxWidth="xs">
       <Box
-        sx={{
+        style={{
           marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
@@ -54,12 +40,23 @@ const Register = () => {
         }}
       >
         <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-          <LockOutlinedIcon/>
+          <LockOpenIcon/>
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Sign in
         </Typography>
-        <Box component="form" noValidate onSubmit={submitFormHandler} sx={{mt: 3}}>
+
+        {error && (
+          <Alert
+            variant="outlined"
+            severity="error"
+            sx={{mt: 3, width: '100%'}}
+          >
+            {error.error}
+          </Alert>
+        )}
+
+        <Box component="form" onSubmit={submitFormHandler} sx={{mt: 3}}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -69,36 +66,32 @@ const Register = () => {
                 autoComplete="off"
                 value={state.username}
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('username'))}
-                helperText={getFieldError('username')}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                name="password"
                 label="Password"
+                name="password"
                 type="password"
                 autoComplete="off"
                 value={state.password}
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('password'))}
-                helperText={getFieldError('password')}
               />
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
+            type="submit"
             variant="contained"
             sx={{mt: 3, mb: 2}}
           >
-            Sign Up
+            Sign In
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link component={RouterLink} to="/login" variant="body2">
-                Already have an account? Sign in
+              <Link component={RouterLink} to="/register" variant="body2">
+                Or sign up
               </Link>
             </Grid>
           </Grid>
@@ -108,4 +101,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

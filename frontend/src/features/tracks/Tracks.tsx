@@ -10,10 +10,12 @@ import {
   Grid,
   List,
   ListItemButton,
+  ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   Typography
 } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import {grey} from '@mui/material/colors';
 
 const theme = createTheme();
@@ -119,8 +121,18 @@ const Tracks: React.FC = () => {
                 {tracksByAlbum.map((track) => (
                   <ListItemButton
                     key={track._id}
-                    alignItems="flex-start"
-                   >
+                    alignItems="center"
+                  >
+                    <ListItemButton
+                      sx={{
+                        flexBasis: '60px',
+                        flexGrow: '0'
+                      }}
+                    >
+                      <ListItemIcon>
+                        <PlayArrowIcon/>
+                      </ListItemIcon>
+                    </ListItemButton>
                     <ListItemText
                       primary={
                         <>
@@ -132,7 +144,7 @@ const Tracks: React.FC = () => {
                     />
                     <ListItemSecondaryAction
                       style={{
-                        opacity: "0.5"
+                        opacity: '0.5'
                       }}
                     >
                       {track.trackDuration}
