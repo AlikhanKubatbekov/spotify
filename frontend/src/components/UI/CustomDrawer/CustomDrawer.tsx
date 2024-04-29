@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import React, {ReactNode, useState} from 'react';
+import {Link, NavLink} from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -24,6 +24,7 @@ import {selectFetchArtistsLoading} from '../../../features/artists/artistsSlice'
 import {useAppSelector} from '../../../app/hooks';
 import {selectFetchAlbumsLoading} from '../../../features/albums/albumsSlice';
 import {selectFetchTracksLoading} from '../../../features/tracks/tracksSlice';
+import {selectUser} from '../../../features/users/usersSlice';
 
 const theme = createTheme();
 const drawerWidth = 300;
@@ -56,6 +57,10 @@ const classes = {
       display: 'none',
     }
   },
+  signUp: {
+    color: 'inherit',
+    marginLeft: 'auto'
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -67,44 +72,23 @@ const classes = {
   toolbar: theme.mixins.toolbar,
 };
 
-const drawer = (
-  <Typography component="div" style={{width: drawerWidth}}>
-    <Box style={{padding: 10, textAlign: 'center'}}>
-      <img
-        alt="logo"
-        src={SpotifyLogo}
-        style={{width: '40%'}}
-      />
-    </Box>
-    <Divider/>
-    <List>
-      <ListItemButton
-        component={Link}
-        selected
-        to="/"
-      >
-        <ListItemIcon
-          sx={{
-            justifyContent: 'flex-end',
-            marginRight: '3px'
-          }}
-        >
-          <HomeIcon/>
-        </ListItemIcon>
-        <ListItemText
-          primary="Home"
-          sx={{
-            display: 'inline-block'
-          }}
-        />
-      </ListItemButton>
+const SideDrawer: React.FC = () => {
+  const user = useAppSelector(selectUser);
 
-      <Typography
-        component="div"
-        sx={{display: {sm: 'none', xs: 'block'}}}
-      >
+  return (
+    <Typography component="div" style={{width: drawerWidth}}>
+      <Box style={{padding: 10, textAlign: 'center'}}>
+        <img
+          alt="logo"
+          src={SpotifyLogo}
+          style={{width: '40%'}}
+        />
+      </Box>
+      <Divider/>
+      <List>
         <ListItemButton
           component={Link}
+          selected
           to="/"
         >
           <ListItemIcon
@@ -113,14 +97,87 @@ const drawer = (
               marginRight: '3px'
             }}
           >
-            <ExitToAppIcon/>
+            <HomeIcon/>
           </ListItemIcon>
-          <ListItemText primary="Log out"/>
+          <ListItemText
+            primary="Home"
+            sx={{
+              display: 'inline-block'
+            }}
+          />
         </ListItemButton>
-      </Typography>
-    </List>
-  </Typography>
-);
+
+        {user && (
+          <Typography
+            component="div"
+            sx={{display: {sm: 'none', xs: 'block'}}}
+          >
+            <ListItemButton
+              component={Link}
+              to="/"
+            >
+              <ListItemIcon
+                sx={{
+                  justifyContent: 'flex-end',
+                  marginRight: '3px'
+                }}
+              >
+                <ExitToAppIcon/>
+              </ListItemIcon>
+              <ListItemText primary="Log out"/>
+            </ListItemButton>
+          </Typography>
+        )}
+      </List>
+    </Typography>
+  );
+};
+
+export const TopNavigation: React.FC<{
+  children?: ReactNode
+  handleDrawerToggle: () => void
+}> = ({children, handleDrawerToggle}) => {
+  const user = useAppSelector(selectUser);
+
+  return (
+    <AppBar
+      position="fixed"
+      color="default"
+      sx={classes.appBar}
+    >
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          sx={classes.menuButton}
+          onClick={handleDrawerToggle}
+        >
+          <MenuIcon/>
+        </IconButton>
+
+        <Button
+          component={NavLink}
+          to="/register"
+          sx={classes.signUp}
+        >
+          Sign Up
+        </Button>
+
+        {user && (
+          <Button
+            color="inherit"
+            sx={classes.logout}
+          >
+            <ExitToAppIcon/>
+            Log out
+          </Button>
+        )}
+      </Toolbar>
+      {children}
+    </AppBar>
+  );
+};
 
 const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -138,30 +195,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
       component="div"
       style={{display: 'flex'}}
     >
-      <AppBar
-        position="fixed"
-        color="default"
-        sx={classes.appBar}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            sx={classes.menuButton}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon/>
-          </IconButton>
-          <Button
-            color="inherit"
-            sx={classes.logout}
-          >
-            <ExitToAppIcon/>
-            Log out
-          </Button>
-        </Toolbar>
-
+      <TopNavigation handleDrawerToggle={handleDrawerToggle}>
         {fetchArtistLoading && (
           <Box style={{width: '100%'}}>
             <LinearProgress/>
@@ -179,7 +213,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
             <LinearProgress/>
           </Box>
         )}
-      </AppBar>
+      </TopNavigation>
 
       <Typography
         component="nav"
@@ -197,7 +231,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
               keepMounted: true,
             }}
           >
-            {drawer}
+            <SideDrawer/>
           </Drawer>
         </Typography>
 
@@ -209,7 +243,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
             open
             variant="permanent"
           >
-            {drawer}
+            <SideDrawer/>
           </Drawer>
         </Typography>
       </Typography>

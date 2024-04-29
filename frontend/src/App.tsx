@@ -5,6 +5,7 @@ import {Typography} from '@mui/material';
 import Artists from './features/artists/Artists';
 import Albums from './features/albums/Albums';
 import Tracks from './features/tracks/Tracks';
+import Register from './features/users/Register';
 
 const App: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Artists/>}/>
         <Route path="/albums" element={<Albums/>}/>
         <Route path="/tracks" element={<Tracks/>}/>
+        <Route path="/register" element={<Register/>} />
 
         <Route path="*" element={<Typography variant="h2">Not found!</Typography>}/>
       </Routes>
