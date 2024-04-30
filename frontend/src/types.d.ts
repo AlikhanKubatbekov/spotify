@@ -1,3 +1,23 @@
+export interface User {
+  _id: string;
+  username: string;
+  token: string;
+}
+
+export interface RegisterMutation {
+  username: string;
+  password: string;
+}
+
+export interface RegisterResponse {
+  user: User;
+}
+
+export interface LoginMutation {
+  username: string;
+  password: string;
+}
+
 export interface Artist {
   _id: string;
   name: string;
@@ -21,19 +41,11 @@ export interface Track {
   trackDuration: string;
 }
 
-export interface RegisterMutation {
-  username: string;
-  password: string;
-}
-
-export interface User {
+export interface TrackListenedTo {
   _id: string;
-  username: string;
-  token: string;
-}
-
-export interface RegisterResponse {
   user: User;
+  track: Track;
+  datetime: Date;
 }
 
 export interface ValidationError {
@@ -50,9 +62,4 @@ export interface ValidationError {
 
 export interface GlobalError {
   error: string;
-}
-
-export interface LoginMutation {
-  username: string;
-  password: string;
 }

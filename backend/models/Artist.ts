@@ -4,9 +4,16 @@ const ArtistSchema = new Schema({
   name: {
     type: String,
     required: true,
+    trim: true,
   },
-  photo: String || null,
-  information: String
+  photo: {
+    type: String || null,
+    trim: true
+  },
+  information: {
+    type: String,
+    trim: true
+  }
 }, {
   versionKey: false,
 });

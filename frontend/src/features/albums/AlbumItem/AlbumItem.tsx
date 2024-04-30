@@ -1,8 +1,9 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {apiURL} from '../../../constans';
 import {Card, CardActionArea, CardContent, CardMedia, Grid, Typography} from '@mui/material';
 import noAlbumImage from '../../../assets/noImageAvailable.png';
-import {apiURL} from '../../../constans';
+import albumItemClasses from './albumItemClasses';
 
 interface Props {
   id: string;
@@ -10,30 +11,6 @@ interface Props {
   publicDate: number;
   albumImage: string | null;
 }
-
-const classes = {
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '56.25%',
-    height: 160,
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-  albumTitle: {
-    display: 'inline-block',
-    fontWeight: 'bold',
-    fontSize: "20px"
-  },
-  publicDate: {
-    display: 'inline-block',
-    opacity: '0.5'
-  }
-};
 
 const AlbumItem: React.FC<Props> = ({id, title, publicDate, albumImage}) => {
   let cardImage = noAlbumImage;
@@ -46,17 +23,17 @@ const AlbumItem: React.FC<Props> = ({id, title, publicDate, albumImage}) => {
     <Grid item xs={12} md={6}>
       <Card
         component={Link}
-        sx={classes.card}
+        sx={albumItemClasses.card}
         to={`/tracks?album=${id}`}
       >
         <CardActionArea>
           <CardMedia
             image={cardImage}
             title={title}
-            sx={classes.cardMedia}
+            sx={albumItemClasses.cardMedia}
           />
           <CardContent
-            sx={classes.cardContent}
+            sx={albumItemClasses.cardContent}
           >
             <Typography
               variant="body1"
@@ -68,12 +45,12 @@ const AlbumItem: React.FC<Props> = ({id, title, publicDate, albumImage}) => {
               }}
             >
               <Typography
-                sx={classes.albumTitle}
+                sx={albumItemClasses.albumTitle}
               >
                 {title}
               </Typography>
               <Typography
-                sx={classes.publicDate}
+                sx={albumItemClasses.publicDate}
               >
                 {publicDate}
               </Typography>

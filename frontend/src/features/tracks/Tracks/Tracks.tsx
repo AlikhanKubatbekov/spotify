@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import {useSearchParams} from 'react-router-dom';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {fetchTracksByAlbums} from './tracksThunk';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {selectTracksByAlbum} from './tracksSlice';
-import {apiURL} from '../../constans';
+import {selectUser} from '../../users/usersSlice';
+import {fetchTracksByAlbums} from './tracksThunk';
+import {addTrackToHistory} from '../TracksHistories/tracksHistoriesThunk';
+import {apiURL} from '../../../constans';
 import {
   Avatar,
-  createTheme,
   Grid,
   List,
   ListItemButton,
@@ -16,41 +17,14 @@ import {
   Typography
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import {grey} from '@mui/material/colors';
-
-const theme = createTheme();
-
-const classes = {
-  gridContainer: {
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'center',
-    },
-  },
-  albumImage: {
-    height: '100%',
-    width: '100%',
-    [theme.breakpoints.down('sm')]: {
-      height: 200,
-      width: 200,
-    },
-  },
-  artistName: {
-    fontWeight: 'bold',
-    [theme.breakpoints.down('sm')]: {
-      textAlign: 'center',
-    },
-  },
-  albumName: {
-    marginTop: theme.spacing(0.5),
-    fontWeight: 'bold',
-    color: grey[500],
-  },
-};
+import tracksClasses from './tracksClasses';
 
 const Tracks: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const albumId = searchParams.get('album');
   const dispatch = useAppDispatch();
+  const albumId = searchParams.get('album');
+  const user = useAppSelector(selectUser);
+  const tracksByAlbum = useAppSelector(selectTracksByAlbum);
 
   useEffect(() => {
     if (albumId) {
@@ -58,7 +32,17 @@ const Tracks: React.FC = () => {
     }
   }, [dispatch, albumId]);
 
-  const tracksByAlbum = useAppSelector(selectTracksByAlbum);
+  const addTrackToHistoryHandler = (token: string, trackId: string) => {
+    dispatch(addTrackToHistory({token, trackId}));
+  };
+
+  const albumImage = tracksByAlbum.length > 0 && {
+    src: tracksByAlbum[0].album.albumImage,
+    alt: tracksByAlbum[0].album.title
+  };
+
+  const albumOwner = tracksByAlbum.length > 0 && tracksByAlbum[0].album.artist.name;
+  const albumName = tracksByAlbum.length > 0 && tracksByAlbum[0].album.title;
 
   const noTracksAvailable = (
     <Typography
@@ -69,14 +53,6 @@ const Tracks: React.FC = () => {
     </Typography>
   );
 
-  const albumImage = tracksByAlbum.length > 0 && {
-    src: tracksByAlbum[0].album.albumImage,
-    alt: tracksByAlbum[0].album.title
-  };
-
-  const albumOwner = tracksByAlbum.length > 0 && tracksByAlbum[0].album.artist.name;
-  const albumName = tracksByAlbum.length > 0 && tracksByAlbum[0].album.title;
-
   return (
     <>
       {tracksByAlbum.length === 0 ? (
@@ -84,7 +60,7 @@ const Tracks: React.FC = () => {
       ) : (
         <>
           <Grid
-            sx={classes.gridContainer}
+            sx={tracksClasses.gridContainer}
             container
             spacing={4}
           >
@@ -94,7 +70,7 @@ const Tracks: React.FC = () => {
                   variant="square"
                   src={apiURL + '/' + albumImage.src}
                   alt={albumImage.alt}
-                  sx={classes.albumImage}
+                  sx={tracksClasses.albumImage}
                 />
               )}
             </Grid>
@@ -102,13 +78,13 @@ const Tracks: React.FC = () => {
               <Typography
                 component="h2"
                 variant="h2"
-                sx={classes.artistName}
+                sx={tracksClasses.artistName}
               >
                 {albumOwner}
               </Typography>
               <Typography
                 variant="h5"
-                sx={classes.albumName}
+                sx={tracksClasses.albumName}
               >
                 {albumName}
               </Typography>
@@ -128,6 +104,7 @@ const Tracks: React.FC = () => {
                         flexBasis: '60px',
                         flexGrow: '0'
                       }}
+                      onClick={user ? () => addTrackToHistoryHandler(user?.token, track._id) : undefined}
                     >
                       <ListItemIcon>
                         <PlayArrowIcon/>

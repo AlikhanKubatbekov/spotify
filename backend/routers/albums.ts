@@ -7,6 +7,32 @@ import Album from '../models/Album';
 
 const albumsRouter = express.Router();
 
+albumsRouter.post('/', imagesUpload.single('albumImage'), async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.body.title || !req.body.artist || !req.body.publicDate) {
+    return res.status(400).json({error: 'Title, artist and public date of album must be present in the request'});
+  }
+
+  const albumData: AlbumMutation = {
+    title: req.body.title,
+    artist: req.body.artist,
+    publicDate: req.body.publicDate,
+    albumImage: req.file ? req.file.filename : null,
+  };
+
+  try {
+    const album = new Album(albumData);
+    await album.save();
+
+    return res.send(album);
+  } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      return res.status(422).json({error: e});
+    }
+
+    next(e);
+  }
+});
+
 albumsRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.query.artist) {
@@ -44,7 +70,7 @@ albumsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction)
     }
 
     const album = await Album
-      .findOne({_id})
+      .findById(_id)
       .populate('artist', 'name photo information');
 
     if (!album) {
@@ -53,32 +79,6 @@ albumsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction)
 
     return res.send(album);
   } catch (e) {
-    next(e);
-  }
-});
-
-albumsRouter.post('/', imagesUpload.single('albumImage'), async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.body.title || !req.body.artist || !req.body.publicDate) {
-    return res.status(400).json({error: 'Title, artist and public date of album must be present in the request'});
-  }
-
-  const albumData: AlbumMutation = {
-    title: req.body.title,
-    artist: req.body.artist,
-    publicDate: req.body.publicDate,
-    albumImage: req.file ? req.file.filename : null,
-  };
-
-  try {
-    const album = new Album(albumData);
-    await album.save();
-
-    return res.send(album);
-  } catch (e) {
-    if (e instanceof mongoose.Error.ValidationError) {
-      return res.status(422).json({error: e});
-    }
-
     next(e);
   }
 });

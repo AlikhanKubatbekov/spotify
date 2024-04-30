@@ -5,6 +5,7 @@ const AlbumSchema = new Schema({
   title: {
     type: String,
     required: true,
+    trim: true
   },
   artist: {
     type: Schema.Types.ObjectId,
@@ -19,7 +20,10 @@ const AlbumSchema = new Schema({
     type: Number,
     required: true,
   },
-  albumImage: String || null
+  albumImage: {
+    type: String || null,
+    trim: true
+  }
 }, {
   versionKey: false,
 });

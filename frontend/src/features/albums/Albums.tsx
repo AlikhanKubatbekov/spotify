@@ -3,6 +3,8 @@ import {useSearchParams} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {fetchAlbumsByArtist} from './albumsThunk';
 import {selectAlbumsByArtist} from './albumsSlice';
+import {fetchArtistById} from '../artists/artistsThunk';
+import {selectArtist} from '../artists/artistsSlice';
 import {Grid, Typography} from '@mui/material';
 import AlbumItem from './AlbumItem/AlbumItem';
 
@@ -14,10 +16,12 @@ const Albums: React.FC = () => {
   useEffect(() => {
     if (artistId) {
       dispatch(fetchAlbumsByArtist(artistId));
+      dispatch(fetchArtistById(artistId));
     }
   }, [dispatch, artistId]);
 
   const albumsByArtist = useAppSelector(selectAlbumsByArtist);
+  const albumsOwner = useAppSelector(selectArtist);
 
   const noAlbumsAvailable = (
     <Typography
@@ -28,8 +32,6 @@ const Albums: React.FC = () => {
     </Typography>
   );
 
-  const albumsOwner = albumsByArtist.length > 0 && albumsByArtist[0].artist.name && albumsByArtist[0].artist.name;
-
   return (
     <>
       {albumsByArtist.length === 0 ? (
@@ -37,13 +39,13 @@ const Albums: React.FC = () => {
       ) : (
         <>
           <Typography component="h2" variant="h3">
-            {albumsOwner}
+            {albumsOwner?.name}
           </Typography>
           <Typography
             component="h3"
             variant="h6"
             style={{
-              opacity: "0.5"
+              opacity: '0.5'
             }}
           >
             Albums

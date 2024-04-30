@@ -47,11 +47,11 @@ const run = async () => {
 
   await User.create({
     username: 'John Doe',
-    password: 'hy1owF',
+    password: '123qwerty',
     token: randomUUID()
   }, {
     username: 'Jack',
-    password: 'QlmLFV',
+    password: 'qwerty123',
     token: randomUUID()
   });
 

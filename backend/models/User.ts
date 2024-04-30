@@ -18,11 +18,13 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
         return !Boolean(user);
       },
       message: 'This user is already registered!'
-    }
+    },
+    trim: true
   },
   password: {
     type: String,
     required: true,
+    trim: true
   },
   token: {
     type: String,
@@ -34,7 +36,7 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
 
 UserSchema.methods.checkPassword = function (password: string) {
   return bcrypt.compare(password, this.password);
-}
+};
 
 UserSchema.methods.generateToken = function () {
   this.token = randomUUID();

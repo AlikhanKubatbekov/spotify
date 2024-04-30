@@ -4,7 +4,7 @@ import Layout from './components/UI/Layout/Layout';
 import {Typography} from '@mui/material';
 import Artists from './features/artists/Artists';
 import Albums from './features/albums/Albums';
-import Tracks from './features/tracks/Tracks';
+import Tracks from './features/tracks/Tracks/Tracks';
 import Register from './features/users/Register';
 import Login from './features/users/Login';
 

@@ -4,11 +4,13 @@ import Album from './Album';
 const TrackSchema = new Schema({
   trackNumber: {
     type: Number,
-    required: true
+    required: true,
+    trim: true
   },
   trackName: {
     type: String,
     required: true,
+    trim: true
   },
   album: {
     type: Schema.Types.ObjectId,
@@ -22,6 +24,7 @@ const TrackSchema = new Schema({
   trackDuration: {
     type: String,
     required: true,
+    trim: true
   }
 }, {
   versionKey: false,

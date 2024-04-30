@@ -11,12 +11,12 @@ trackHistoryRouter.post('/', auth, async (req: RequestWithUser, res: Response, n
   }
 
   try {
-    const datetime = new Date();
+    const currentDatetime = new Date().toISOString();
 
     const trackHistory = new TrackHistory({
       user: req.user?._id,
       track: req.body.track,
-      datetime: datetime.toISOString(),
+      datetime: currentDatetime,
     });
 
     await trackHistory.save();
