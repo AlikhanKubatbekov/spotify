@@ -1,7 +1,8 @@
 import {Schema, model, Types} from 'mongoose';
 import Artist from './Artist';
+import {Album} from '../types';
 
-const AlbumSchema = new Schema({
+const AlbumSchema = new Schema<Album>({
   title: {
     type: String,
     required: true,

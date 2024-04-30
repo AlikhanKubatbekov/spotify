@@ -1,4 +1,4 @@
-import {Model} from 'mongoose';
+import {Model, Schema} from 'mongoose';
 
 export interface UserFields {
   username: string;
@@ -31,4 +31,31 @@ export interface TrackMutation {
   trackName: string;
   album: string;
   trackDuration: string;
+}
+
+export interface Track extends Document{
+  trackNumber: number;
+  trackName: string;
+  album: Schema.ObjectId;
+  trackDuration: string;
+}
+
+export interface Album extends Document {
+  title: string;
+  artist: Schema.ObjectId;
+  publicDate: number;
+  albumImage: string | null;
+}
+
+export interface Artist extends Document {
+  name: string;
+  photo: string | null;
+  information: string | null;
+}
+
+export interface TrackHistory extends Document {
+  user: Schema.ObjectId;
+  track: Schema.ObjectId;
+  artist: Schema.ObjectId;
+  datetime: Date
 }

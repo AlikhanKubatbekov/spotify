@@ -2,6 +2,9 @@ import express, {NextFunction, Response} from 'express';
 import {Error} from 'mongoose';
 import TrackHistory from '../models/TrackHistory';
 import auth, {RequestWithUser} from '../middleware/auth';
+import Artist from '../models/Artist';
+import Track from '../models/Track';
+import {Album} from '../types';
 
 const trackHistoryRouter = express.Router();
 
@@ -12,13 +15,30 @@ trackHistoryRouter.post('/', auth, async (req: RequestWithUser, res: Response, n
 
   try {
     const currentDatetime = new Date().toISOString();
+    const track = await Track
+      .findOne({_id: req.body.track})
+      .populate({
+        path: 'album',
+        populate: {
+          path: 'artist',
+          select: '_id'
+        }
+      })
+      .exec() as Track & { album: Album & { artist: Artist } };
 
-    const trackHistory = new TrackHistory({
+    if (!track) return res.status(400).json({error: 'Track not found'});
+
+    const artistId = track.album.artist._id;
+    if (!artistId) return res.status(400).json({error: 'Artist not found'});
+
+    const trackHistoryData = {
       user: req.user?._id,
       track: req.body.track,
+      artist: artistId,
       datetime: currentDatetime,
-    });
+    };
 
+    const trackHistory = new TrackHistory(trackHistoryData);
     await trackHistory.save();
 
     return res.send(trackHistory);
@@ -27,6 +47,31 @@ trackHistoryRouter.post('/', auth, async (req: RequestWithUser, res: Response, n
       return res.status(422).json({error: e});
     }
 
+    next(e);
+  }
+});
+
+trackHistoryRouter.get('/', auth, async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  try {
+    if (req.user) {
+      const trackHistory = await TrackHistory
+        .find({user: req.user._id})
+        .sort({datetime: -1})
+        .populate({
+          path: 'artist',
+          select: 'name'
+        })
+        .populate({
+          path: 'track',
+          select: 'trackName'
+        })
+        .exec();
+
+      return res.send(trackHistory);
+    } else {
+      return res.status(400).json({error: 'You must be logged in!'});
+    }
+  } catch (e) {
     next(e);
   }
 });

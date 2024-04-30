@@ -1,7 +1,8 @@
 import {model, Schema, Types} from 'mongoose';
 import Album from './Album';
+import {Track} from '../types';
 
-const TrackSchema = new Schema({
+const TrackSchema = new Schema<Track>({
   trackNumber: {
     type: Number,
     required: true,
