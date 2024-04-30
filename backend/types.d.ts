@@ -54,6 +54,7 @@ export interface Artist extends Document {
 }
 
 export interface TrackHistory extends Document {
+  _id: Schema.ObjectId,
   user: Schema.ObjectId;
   track: Schema.ObjectId;
   artist: Schema.ObjectId;

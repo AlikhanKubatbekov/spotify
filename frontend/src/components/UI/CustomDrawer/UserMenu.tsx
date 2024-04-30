@@ -1,7 +1,9 @@
 import customDrawerClasses from './customDrawerClasses';
 import {persistor} from '../../../app/store';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import {Link} from 'react-router-dom';
 import {Button, Typography} from '@mui/material';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 
 const UserMenu = () => {
   return (
@@ -11,12 +13,19 @@ const UserMenu = () => {
         marginLeft: 'auto'
       }}>
       <Button
-        color="inherit"
+        component={Link}
+        sx={customDrawerClasses.recents}
+        to="/track_history"
+      >
+        Recents
+        <MenuOutlinedIcon/>
+      </Button>
+      <Button
         sx={customDrawerClasses.logout}
         onClick={() => persistor.purge()}
       >
-        <ExitToAppIcon/>
         Log out
+        <ExitToAppIcon/>
       </Button>
     </Typography>
   );

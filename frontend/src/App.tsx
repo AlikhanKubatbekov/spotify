@@ -7,6 +7,7 @@ import Albums from './features/albums/Albums';
 import Tracks from './features/tracks/Tracks/Tracks';
 import Register from './features/users/Register';
 import Login from './features/users/Login';
+import TracksHistory from './features/tracks/TracksHistories/TracksHistory';
 
 const App: React.FC = () => {
   return (
@@ -16,7 +17,8 @@ const App: React.FC = () => {
         <Route path="/albums" element={<Albums/>}/>
         <Route path="/tracks" element={<Tracks/>}/>
         <Route path="/register" element={<Register/>}/>
-        <Route path="/login" element={<Login/>} />
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/track_history" element={<TracksHistory/>}/>
 
         <Route path="*" element={<Typography variant="h2">Not found!</Typography>}/>
       </Routes>

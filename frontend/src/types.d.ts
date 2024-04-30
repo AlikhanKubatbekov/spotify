@@ -45,6 +45,7 @@ export interface TrackListenedTo {
   _id: string;
   user: User;
   track: Track;
+  artist: Artist;
   datetime: Date;
 }
 

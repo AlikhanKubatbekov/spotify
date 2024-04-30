@@ -1,20 +1,18 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {addTrackToHistory} from './tracksHistoriesThunk';
+import {addTrackToHistory, fetchTracksHistories} from './tracksHistoriesThunk';
 import {RootState} from '../../../app/store';
-import {GlobalError, TrackListenedTo} from '../../../types';
+import {TrackListenedTo} from '../../../types';
 
 interface TracksListenedToState {
-  tracksHistory: TrackListenedTo[];
+  items: TrackListenedTo[];
   fetchTracksHistoriesLoading: boolean;
   addTrackToHistoryLoading: boolean;
-  addTrackToHistoryError: GlobalError | null;
 }
 
 const initialState: TracksListenedToState = {
-  tracksHistory: [],
+  items: [],
   fetchTracksHistoriesLoading: false,
   addTrackToHistoryLoading: false,
-  addTrackToHistoryError: null
 };
 
 export const tracksHistoriesSlice = createSlice({
@@ -24,18 +22,26 @@ export const tracksHistoriesSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(addTrackToHistory.pending, (state) => {
       state.addTrackToHistoryLoading = true;
-      state.addTrackToHistoryError = null;
-    }).addCase(addTrackToHistory.fulfilled, (state, {payload: trackListenedTo}) => {
+    }).addCase(addTrackToHistory.fulfilled, (state) => {
       state.addTrackToHistoryLoading = false;
-      state.tracksHistory.push(trackListenedTo);
-    }).addCase(addTrackToHistory.rejected, (state, {payload: error}) => {
+    }).addCase(addTrackToHistory.rejected, (state) => {
       state.addTrackToHistoryLoading = false;
-      state.addTrackToHistoryError = error || null;
+    });
+
+    builder.addCase(fetchTracksHistories.pending, (state) => {
+      state.fetchTracksHistoriesLoading = true;
+    }).addCase(fetchTracksHistories.fulfilled, (state, {payload: trackHistory}) => {
+      state.fetchTracksHistoriesLoading = false;
+      state.items = trackHistory;
+    }).addCase(fetchTracksHistories.rejected, (state) => {
+      state.fetchTracksHistoriesLoading = false;
     });
   }
 });
 
 export const tracksHistoriesReducer = tracksHistoriesSlice.reducer;
 
+export const selectTracksHistory = (state: RootState) => state.tracksHistories.items;
+
 export const selectAddTrackToHistoryLoading = (state: RootState) => state.tracksHistories.addTrackToHistoryLoading;
-export const selectAddTrackToHistoryError = (state: RootState) => state.tracksHistories.addTrackToHistoryError;
+export const selectFetchTracksHistoryLoading = (state: RootState) => state.tracksHistories.fetchTracksHistoriesLoading;

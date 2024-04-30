@@ -1,6 +1,6 @@
 import darkTheme from '../../../theme';
 
-export const drawerWidth = 300;
+export const drawerWidth = 270;
 
 const customDrawerClasses = {
   drawer: {
@@ -24,7 +24,13 @@ const customDrawerClasses = {
       display: 'none',
     },
   },
+  recents: {
+    gap: '3px',
+    color: 'inherit',
+  },
   logout: {
+    gap: '3px',
+    color: 'inherit',
     [darkTheme.breakpoints.only('xs')]: {
       display: 'none',
     }

@@ -4,7 +4,10 @@ import {selectFetchArtistsLoading} from '../../../features/artists/artistsSlice'
 import {selectFetchAlbumsLoading} from '../../../features/albums/albumsSlice';
 import {selectFetchTracksLoading} from '../../../features/tracks/Tracks/tracksSlice';
 import {selectLoginLoading, selectRegisterLoading} from '../../../features/users/usersSlice';
-import {selectAddTrackToHistoryLoading} from '../../../features/tracks/TracksHistories/tracksHistoriesSlice';
+import {
+  selectAddTrackToHistoryLoading,
+  selectFetchTracksHistoryLoading
+} from '../../../features/tracks/TracksHistories/tracksHistoriesSlice';
 import {Box, Drawer, LinearProgress, Typography} from '@mui/material';
 import SideDrawer from './SideDrawer';
 import TopNavigation from './TopNavigation';
@@ -23,6 +26,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
   const registerLoading = useAppSelector(selectRegisterLoading);
   const loginLoading = useAppSelector(selectLoginLoading);
   const addTrackToHistoryLoading = useAppSelector(selectAddTrackToHistoryLoading);
+  const fetchTracksHistoryLoading = useAppSelector(selectFetchTracksHistoryLoading);
 
   const topNavigationLoadingBox = (
     <Box style={{width: '100%'}}>
@@ -44,6 +48,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
         {registerLoading && (topNavigationLoadingBox)}
         {loginLoading && (topNavigationLoadingBox)}
         {addTrackToHistoryLoading && (topNavigationLoadingBox)}
+        {fetchTracksHistoryLoading && (topNavigationLoadingBox)}
       </TopNavigation>
 
       <Typography

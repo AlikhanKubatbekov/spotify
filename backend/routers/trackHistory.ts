@@ -1,5 +1,6 @@
 import express, {NextFunction, Response} from 'express';
 import {Error} from 'mongoose';
+import dayjs from 'dayjs';
 import TrackHistory from '../models/TrackHistory';
 import auth, {RequestWithUser} from '../middleware/auth';
 import Artist from '../models/Artist';
@@ -54,7 +55,7 @@ trackHistoryRouter.post('/', auth, async (req: RequestWithUser, res: Response, n
 trackHistoryRouter.get('/', auth, async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
-      const trackHistory = await TrackHistory
+      const trackHistories = await TrackHistory
         .find({user: req.user._id})
         .sort({datetime: -1})
         .populate({
@@ -67,7 +68,21 @@ trackHistoryRouter.get('/', auth, async (req: RequestWithUser, res: Response, ne
         })
         .exec();
 
-      return res.send(trackHistory);
+      const formatTrackHistoryDates = (trackHistories: TrackHistory[]) => {
+        return trackHistories.map((trackHistory: TrackHistory) => {
+          const {_id, user, track, artist, datetime} = trackHistory;
+          return {
+            _id,
+            user,
+            track,
+            artist,
+            datetime: dayjs(datetime).format('HH:mm:ss DD-MM-YYYY')
+          };
+        });
+      };
+
+      const formattedTrackHistories = formatTrackHistoryDates(trackHistories);
+      return res.send(formattedTrackHistories);
     } else {
       return res.status(400).json({error: 'You must be logged in!'});
     }

@@ -89,7 +89,7 @@ const Tracks: React.FC = () => {
                 {albumName}
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12}>
               <Typography variant="h3" gutterBottom>
                 Tracks:
               </Typography>

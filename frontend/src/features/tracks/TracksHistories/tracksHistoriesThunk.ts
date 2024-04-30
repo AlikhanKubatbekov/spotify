@@ -10,7 +10,7 @@ export const addTrackToHistory = createAsyncThunk<
   async (
     {token, trackId}
   ): Promise<TrackListenedTo> => {
-    const response = await axiosApi.post<TrackListenedTo>(
+    const {data: listenedTrack} = await axiosApi.post<TrackListenedTo>(
       '/track_history',
       {track: trackId},
       {
@@ -19,6 +19,19 @@ export const addTrackToHistory = createAsyncThunk<
         }
       });
 
-    return response.data;
+    return listenedTrack;
+  }
+);
+
+export const fetchTracksHistories = createAsyncThunk<TrackListenedTo[], string | undefined>(
+  'tracksHistories/fetchTracksHistories',
+  async (token): Promise<TrackListenedTo[]> => {
+    const {data: trackHistory} = await axiosApi.get<TrackListenedTo[]>('/track_history', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    return trackHistory;
   }
 );
