@@ -46,13 +46,15 @@ const run = async () => {
   }
 
   await User.create({
-    username: 'John Doe',
+    username: 'John',
     password: '123qwerty',
-    token: randomUUID()
+    token: randomUUID(),
+    role: 'admin'
   }, {
     username: 'Jack',
     password: 'qwerty123',
-    token: randomUUID()
+    token: randomUUID(),
+    role: 'user'
   });
 
   const [pastelGhostArtist, seekaeArtist] = await Artist.create({

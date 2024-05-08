@@ -14,6 +14,11 @@ const ArtistSchema = new Schema<Artist>({
   information: {
     type: String,
     trim: true
+  },
+  isPublished: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 }, {
   versionKey: false,

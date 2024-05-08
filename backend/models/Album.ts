@@ -24,6 +24,11 @@ const AlbumSchema = new Schema<Album>({
   albumImage: {
     type: String || null,
     trim: true
+  },
+  isPublished: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 }, {
   versionKey: false,

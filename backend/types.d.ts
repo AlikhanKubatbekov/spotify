@@ -4,10 +4,12 @@ export interface UserFields {
   username: string;
   password: string;
   token: string;
+  role: string;
 }
 
 export interface UserMethods {
   checkPassword(password: string): Promise<boolean>;
+
   generateToken(): void;
 }
 
@@ -33,24 +35,27 @@ export interface TrackMutation {
   trackDuration: string;
 }
 
-export interface Track extends Document{
-  trackNumber: number;
-  trackName: string;
-  album: Schema.ObjectId;
-  trackDuration: string;
-}
-
 export interface Album extends Document {
   title: string;
   artist: Schema.ObjectId;
   publicDate: number;
   albumImage: string | null;
+  isPublished: boolean;
 }
 
 export interface Artist extends Document {
   name: string;
   photo: string | null;
   information: string | null;
+  isPublished: boolean;
+}
+
+export interface Track extends Document {
+  trackNumber: number;
+  trackName: string;
+  album: Schema.ObjectId;
+  trackDuration: string;
+  isPublished: boolean;
 }
 
 export interface TrackHistory extends Document {

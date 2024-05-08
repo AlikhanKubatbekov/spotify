@@ -1,11 +1,14 @@
 import ReactDOM from 'react-dom/client';
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
-import {store, persistor} from './app/store';
-import {CssBaseline, ThemeProvider} from '@mui/material';
+import {persistor, store} from './app/store';
 import App from './App';
+import {PersistGate} from 'redux-persist/integration/react';
+import {addInterceptors} from './axiosApi';
 import theme from './theme';
-import { PersistGate } from 'redux-persist/integration/react';
+import {CssBaseline, ThemeProvider} from '@mui/material';
+
+addInterceptors(store);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
