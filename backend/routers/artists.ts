@@ -1,31 +1,38 @@
-import express, {Request, Response, NextFunction} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import Artist from '../models/Artist';
+import auth, {RequestWithUser} from '../middleware/auth';
 import {imagesUpload} from '../multer';
-import {ArtistMutation} from '../types';
 import {ObjectId} from 'mongodb';
+import {ArtistMutation} from '../types';
 
 const artistsRouter = express.Router();
 
-artistsRouter.post('/', imagesUpload.single('photo'), async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.body.name) {
-    return res.status(400).json({error: 'Name of artist must be present in the request'});
-  }
+artistsRouter.post(
+  '/',
+  auth,
+  imagesUpload.single('photo'),
+  async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    try {
+      if (req.user) {
+        if (!req.body.name) {
+          return res.status(400).json({error: 'Name of artist must be present in the request'});
+        }
 
-  const artistData: ArtistMutation = {
-    name: req.body.name,
-    photo: req.file ? req.file.filename : null,
-    information: req.body.information
-  };
+        const artistData: ArtistMutation = {
+          name: req.body.name,
+          photo: req.file ? req.file.filename : null,
+          information: req.body.information
+        };
 
-  try {
-    const artist = new Artist(artistData);
-    await artist.save();
+        const artist = new Artist(artistData);
+        await artist.save();
 
-    return res.send(artist);
-  } catch (e) {
-    next(e);
-  }
-});
+        return res.send(artist);
+      }
+    } catch (e) {
+      next(e);
+    }
+  });
 
 artistsRouter.get('/', async (_req: Request, res: Response, next: NextFunction) => {
   try {
@@ -56,7 +63,7 @@ artistsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction
     }
 
     return res.send(artist);
-  } catch (e){
+  } catch (e) {
     next(e);
   }
 });
