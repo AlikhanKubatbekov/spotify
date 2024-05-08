@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useAppSelector} from '../../../app/hooks';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {selectFetchArtistsLoading} from '../../../features/artists/artistsSlice';
 import {selectFetchAlbumsLoading} from '../../../features/albums/albumsSlice';
 import {selectFetchTracksLoading} from '../../../features/tracks/Tracks/tracksSlice';
@@ -12,12 +12,19 @@ import {Box, Drawer, LinearProgress, Typography} from '@mui/material';
 import SideDrawer from './SideDrawer';
 import TopNavigation from './TopNavigation';
 import customDrawerClasses from './customDrawerClasses';
+import {userLogout} from '../../../features/users/usersThunk';
 
 const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const dispatch = useAppDispatch();
+
+  const handleUserLogout = () => {
+    dispatch(userLogout());
   };
 
   const fetchArtistLoading = useAppSelector(selectFetchArtistsLoading);
@@ -41,6 +48,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
     >
       <TopNavigation
         handleDrawerToggle={handleDrawerToggle}
+        handleUserLogout={handleUserLogout}
       >
         {fetchArtistLoading && (topNavigationLoadingBox)}
         {fetchAlbumsLoading && (topNavigationLoadingBox)}
@@ -67,7 +75,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
               keepMounted: true,
             }}
           >
-            <SideDrawer/>
+            <SideDrawer handleUserLogout={handleUserLogout}/>
           </Drawer>
         </Typography>
 
@@ -79,7 +87,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({children}) => {
             open
             variant="permanent"
           >
-            <SideDrawer/>
+            <SideDrawer handleUserLogout={handleUserLogout}/>
           </Drawer>
         </Typography>
       </Typography>

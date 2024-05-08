@@ -32,8 +32,8 @@ const Tracks: React.FC = () => {
     }
   }, [dispatch, albumId]);
 
-  const addTrackToHistoryHandler = (token: string, trackId: string) => {
-    dispatch(addTrackToHistory({token, trackId}));
+  const addTrackToHistoryHandler = (trackId: string) => {
+    dispatch(addTrackToHistory(trackId));
   };
 
   const albumImage = tracksByAlbum.length > 0 && {
@@ -104,7 +104,7 @@ const Tracks: React.FC = () => {
                         flexBasis: '60px',
                         flexGrow: '0'
                       }}
-                      onClick={user ? () => addTrackToHistoryHandler(user?.token, track._id) : undefined}
+                      onClick={user ? () => addTrackToHistoryHandler(track._id) : undefined}
                     >
                       <ListItemIcon>
                         <PlayArrowIcon/>

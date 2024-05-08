@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {selectUser} from '../../users/usersSlice';
 import {fetchTracksHistories} from './tracksHistoriesThunk';
 import {selectTracksHistory} from './tracksHistoriesSlice';
@@ -8,15 +8,12 @@ import {Button, Grid, List, ListItemButton, ListItemSecondaryAction, ListItemTex
 import tracksHistoryClasses from './tracksHistoryClasses';
 
 const TracksHistory: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
 
-  if (!user) navigate('/');
-
   useEffect(() => {
     if (user) {
-      dispatch(fetchTracksHistories(user.token));
+      dispatch(fetchTracksHistories());
     }
   }, [dispatch, user]);
 

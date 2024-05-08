@@ -7,10 +7,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import customDrawerClasses from './customDrawerClasses';
 import UserMenu from './UserMenu';
 
-export const TopNavigation: React.FC<{
-  children?: ReactNode
+interface Props {
+  children?: ReactNode;
   handleDrawerToggle: () => void
-}> = ({children, handleDrawerToggle}) => {
+  handleUserLogout: () => void;
+}
+
+const TopNavigation: React.FC<Props> = ({children, handleDrawerToggle, handleUserLogout}) => {
   const user = useAppSelector(selectUser);
 
   return (
@@ -31,9 +34,9 @@ export const TopNavigation: React.FC<{
         </IconButton>
 
         {user ? (
-          <UserMenu/>
+          <UserMenu handleUserLogout={handleUserLogout}/>
         ) : (
-          <AnonymousMenu />
+          <AnonymousMenu/>
         )}
       </Toolbar>
       {children}

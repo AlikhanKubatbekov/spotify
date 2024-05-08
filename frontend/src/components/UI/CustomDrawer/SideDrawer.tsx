@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {persistor} from '../../../app/store';
 import {useAppSelector} from '../../../app/hooks';
 import {selectUser} from '../../../features/users/usersSlice';
 import {Box, Divider, List, ListItemButton, ListItemIcon, ListItemText, Typography} from '@mui/material';
@@ -9,7 +8,11 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SpotifyLogo from '../../../assets/spotifyLogo.png';
 import {drawerWidth} from './customDrawerClasses';
 
-const SideDrawer: React.FC = () => {
+interface Props {
+  handleUserLogout: () => void;
+}
+
+const SideDrawer: React.FC<Props> = ({handleUserLogout}) => {
   const user = useAppSelector(selectUser);
 
   return (
@@ -56,7 +59,7 @@ const SideDrawer: React.FC = () => {
             <ListItemButton
               component={Link}
               to="/"
-              onClick={() => persistor.purge()}
+              onClick={handleUserLogout}
             >
               <ListItemIcon
                 style={{

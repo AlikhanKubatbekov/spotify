@@ -9,6 +9,8 @@ import {
   User,
   ValidationError
 } from '../../types';
+import {RootState} from '../../app/store';
+import {unsetUser} from './usersSlice';
 
 export const register = createAsyncThunk<
   RegisterResponse,
@@ -47,5 +49,18 @@ export const login = createAsyncThunk<
 
       throw e;
     }
+  }
+);
+
+export const userLogout = createAsyncThunk<
+  void,
+  void,
+  { state: RootState }
+>(
+  'users/logout',
+  async (_, {dispatch}) => {
+    // const token = getState().users.user?.token;
+    await axiosApi.delete('/users/sessions');
+    dispatch(unsetUser());
   }
 );

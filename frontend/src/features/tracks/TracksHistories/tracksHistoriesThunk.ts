@@ -4,20 +4,13 @@ import {TrackListenedTo} from '../../../types';
 
 export const addTrackToHistory = createAsyncThunk<
   TrackListenedTo,
-  { token: string | undefined, trackId: string }
+  string
 >(
   'tracksHistories/addTrackToHistory',
-  async (
-    {token, trackId}
-  ): Promise<TrackListenedTo> => {
+  async (trackId): Promise<TrackListenedTo> => {
     const {data: listenedTrack} = await axiosApi.post<TrackListenedTo>(
       '/track_history',
-      {track: trackId},
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      {track: trackId});
 
     return listenedTrack;
   }
@@ -25,12 +18,8 @@ export const addTrackToHistory = createAsyncThunk<
 
 export const fetchTracksHistories = createAsyncThunk<TrackListenedTo[], string | undefined>(
   'tracksHistories/fetchTracksHistories',
-  async (token): Promise<TrackListenedTo[]> => {
-    const {data: trackHistory} = await axiosApi.get<TrackListenedTo[]>('/track_history', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
+  async (): Promise<TrackListenedTo[]> => {
+    const {data: trackHistory} = await axiosApi.get<TrackListenedTo[]>('/track_history');
 
     return trackHistory;
   }

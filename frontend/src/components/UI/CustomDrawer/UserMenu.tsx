@@ -1,11 +1,15 @@
-import customDrawerClasses from './customDrawerClasses';
-import {persistor} from '../../../app/store';
+import React from 'react';
 import {Link} from 'react-router-dom';
 import {Button, Typography} from '@mui/material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import customDrawerClasses from './customDrawerClasses';
 
-const UserMenu = () => {
+interface Props {
+  handleUserLogout: () => void;
+}
+
+const UserMenu: React.FC<Props> = ({handleUserLogout}) => {
   return (
     <Typography
       component="div"
@@ -22,7 +26,7 @@ const UserMenu = () => {
       </Button>
       <Button
         sx={customDrawerClasses.logout}
-        onClick={() => persistor.purge()}
+        onClick={handleUserLogout}
       >
         Log out
         <ExitToAppIcon/>
