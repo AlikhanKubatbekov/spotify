@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import auth, {RequestWithUser} from '../middleware/auth';
 import Track from '../models/Track';
 import Artist from '../models/Artist';
+import permit from '../middleware/permit';
 
 const tracksRouter = express.Router();
 
@@ -66,5 +67,24 @@ tracksRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
     next(e);
   }
 });
+
+tracksRouter.delete(
+  '/:id',
+  auth,
+  permit('admin'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const trackId = req.params.id;
+      const track = await Track.findById(trackId);
+
+      if (!track) return res.status(404).send({error: 'Track not found!'});
+
+      await Track.findByIdAndDelete({_id: trackId});
+
+      return res.status(200).send({message: 'Deleted successfully.'});
+    } catch (e) {
+      next(e);
+    }
+  });
 
 export default tracksRouter;

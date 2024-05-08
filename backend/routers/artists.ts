@@ -4,6 +4,7 @@ import auth, {RequestWithUser} from '../middleware/auth';
 import {imagesUpload} from '../multer';
 import {ObjectId} from 'mongodb';
 import {ArtistMutation} from '../types';
+import permit from '../middleware/permit';
 
 const artistsRouter = express.Router();
 
@@ -67,5 +68,24 @@ artistsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction
     next(e);
   }
 });
+
+artistsRouter.delete(
+  '/:id',
+  auth,
+  permit('admin'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const artistId = req.params.id;
+      const artist = await Artist.findById(artistId);
+
+      if (!artist) return res.status(404).send({error: 'Artist not found!'});
+
+      await Artist.findByIdAndDelete({_id: artistId});
+
+      return res.status(200).send({message: 'Deleted successfully.'});
+    } catch (e) {
+      next(e);
+    }
+  });
 
 export default artistsRouter
