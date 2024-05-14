@@ -6,13 +6,16 @@ import {RegisterMutation} from '../../types';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectRegisterError} from './usersSlice';
 import {register} from './usersThunk';
+import FileInput from '../../components/UI/FileInput/FileInput';
 
 const Register = () => {
   const navigate = useNavigate();
 
   const [state, setState] = useState<RegisterMutation>({
-    username: '',
-    password: ''
+    email: '',
+    password: '',
+    displayName: '',
+    avatar: null
   });
 
   const dispatch = useAppDispatch();
@@ -29,10 +32,21 @@ const Register = () => {
     event.preventDefault();
 
     await dispatch(register({
-      username: state.username.trim(),
-      password: state.password.trim()
+      email: state.email.trim(),
+      password: state.password.trim(),
+      displayName: state.displayName.trim(),
+      avatar: state.avatar ? state.avatar : null
     })).unwrap();
     navigate('/');
+  };
+
+  const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {name, files} = e.target;
+    if (files) {
+      setState((prevState) => ({
+        ...prevState, [name]: files[0]
+      }));
+    }
   };
 
   const getFieldError = (fieldName: string) => {
@@ -64,13 +78,13 @@ const Register = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Username"
-                name="username"
+                label="Email"
+                name="email"
                 autoComplete="off"
-                value={state.username}
+                value={state.email}
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('username'))}
-                helperText={getFieldError('username')}
+                error={Boolean(getFieldError('email'))}
+                helperText={getFieldError('email')}
               />
             </Grid>
             <Grid item xs={12}>
@@ -84,6 +98,25 @@ const Register = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('password'))}
                 helperText={getFieldError('password')}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Display name"
+                name="displayName"
+                autoComplete="off"
+                value={state.displayName}
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('displayName'))}
+                helperText={getFieldError('displayName')}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FileInput
+                label="Avatar"
+                name="avatar"
+                onChange={fileInputChangeHandler}
               />
             </Grid>
           </Grid>

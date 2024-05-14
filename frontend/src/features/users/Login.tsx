@@ -2,16 +2,17 @@ import React, {useState} from 'react';
 import {Link as RouterLink, useNavigate} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectLoginError} from './usersSlice';
-import {login} from './usersThunk';
+import {googleLogin, login} from './usersThunk';
 import {Alert, Avatar, Box, Button, Container, Grid, Link, TextField, Typography} from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import {LoginMutation} from '../../types';
+import {GoogleLogin} from '@react-oauth/google';
 
 const Login = () => {
   const navigate = useNavigate();
   const [state, setState] = useState<LoginMutation>({
-    username: '',
-    password: '',
+    email: '',
+    password: ''
   });
 
   const dispatch = useAppDispatch();
@@ -20,6 +21,11 @@ const Login = () => {
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
     setState(prevState => ({...prevState, [name]: value}));
+  };
+
+  const googleLoginHandler = async (credential: string) => {
+    await dispatch(googleLogin(credential)).unwrap();
+    navigate('/');
   };
 
   const submitFormHandler = async (event: React.FormEvent) => {
@@ -55,15 +61,28 @@ const Login = () => {
           </Alert>
         )}
 
+        <Box sx={{pt: 2}}>
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              if (credentialResponse.credential) {
+                void googleLoginHandler(credentialResponse.credential);
+              }
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
+        </Box>
+
         <Box component="form" onSubmit={submitFormHandler} sx={{mt: 3}}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Username"
-                name="username"
+                label="Email"
+                name="email"
                 autoComplete="off"
-                value={state.username}
+                value={state.email}
                 onChange={inputChangeHandler}
               />
             </Grid>

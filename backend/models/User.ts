@@ -6,15 +6,15 @@ import {randomUUID} from 'crypto';
 const SALT_WORK_FACTOR = 10;
 
 const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
-  username: {
+  email: {
     type: String,
     required: true,
     unique: true,
     validate: {
-      validator: async function (this: HydratedDocument<UserFields>, username: string): Promise<boolean> {
-        if (!this.isModified('username')) return true;
+      validator: async function (this: HydratedDocument<UserFields>, email: string): Promise<boolean> {
+        if (!this.isModified('email')) return true;
 
-        const user: HydratedDocument<UserFields> | null = await User.findOne({username});
+        const user: HydratedDocument<UserFields> | null = await User.findOne({email});
         return !Boolean(user);
       },
       message: 'This user is already registered!'
@@ -35,7 +35,14 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
     required: true,
     enum: ['admin', 'user'],
     default: 'user'
-  }
+  },
+  displayName: {
+    required: true,
+    type: String,
+    trim: true
+  },
+  googleId: String,
+  avatar: String || null
 }, {
   versionKey: false,
 });

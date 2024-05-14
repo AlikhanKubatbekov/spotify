@@ -25,7 +25,7 @@ const TracksHistory: React.FC = () => {
         component="h2"
         variant="h4"
       >
-        Hello, {user?.username}
+        Hello, {user?.displayName}
       </Typography>
       <Grid item xs={12}>
         <Typography
