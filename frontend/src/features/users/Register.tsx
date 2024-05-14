@@ -28,18 +28,6 @@ const Register = () => {
     });
   };
 
-  const submitFormHandler = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    await dispatch(register({
-      email: state.email.trim(),
-      password: state.password.trim(),
-      displayName: state.displayName.trim(),
-      avatar: state.avatar ? state.avatar : null
-    })).unwrap();
-    navigate('/');
-  };
-
   const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, files} = e.target;
     if (files) {
@@ -47,6 +35,18 @@ const Register = () => {
         ...prevState, [name]: files[0]
       }));
     }
+  };
+
+  const submitFormHandler = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    await dispatch(register({
+      email: state.email.trim(),
+      password: state.password.trim(),
+      displayName: state.displayName.trim(),
+      avatar: state.avatar
+    })).unwrap();
+    navigate('/');
   };
 
   const getFieldError = (fieldName: string) => {

@@ -34,7 +34,7 @@ const TracksHistory: React.FC = () => {
           marginY="10px"
           style={{opacity: '0.5'}}
         >
-          {trackHistory.length > 0 ? 'Your recents:' : 'You have not listened to any tracks yet!'}
+          {trackHistory.length > 0 ? 'Your recent:' : 'You have not listened to any tracks yet!'}
         </Typography>
 
         {trackHistory.length === 0 && (
