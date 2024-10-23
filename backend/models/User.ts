@@ -1,51 +1,54 @@
-import {HydratedDocument, model, Schema} from 'mongoose';
+import { HydratedDocument, model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
-import {UserFields, UserMethods, UserModel} from '../types';
-import {randomUUID} from 'crypto';
+import { UserFields, UserMethods, UserModel } from '../types';
+import { randomUUID } from 'crypto';
 
 const SALT_WORK_FACTOR = 10;
 
-const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    validate: {
-      validator: async function (this: HydratedDocument<UserFields>, email: string): Promise<boolean> {
-        if (!this.isModified('email')) return true;
+const UserSchema = new Schema<UserFields, UserModel, UserMethods>(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: async function (this: HydratedDocument<UserFields>, email: string): Promise<boolean> {
+          if (!this.isModified('email')) return true;
 
-        const user: HydratedDocument<UserFields> | null = await User.findOne({email});
-        return !Boolean(user);
+          const user: HydratedDocument<UserFields> | null = await User.findOne({ email });
+          return !Boolean(user);
+        },
+        message: 'This user is already registered!',
       },
-      message: 'This user is already registered!'
+      trim: true,
     },
-    trim: true
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    token: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: ['admin', 'user'],
+      default: 'user',
+    },
+    displayName: {
+      required: true,
+      type: String,
+      trim: true,
+    },
+    googleId: String,
+    avatar: String || null,
   },
-  password: {
-    type: String,
-    required: true,
-    trim: true
+  {
+    versionKey: false,
   },
-  token: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    required: true,
-    enum: ['admin', 'user'],
-    default: 'user'
-  },
-  displayName: {
-    required: true,
-    type: String,
-    trim: true
-  },
-  googleId: String,
-  avatar: String || null
-}, {
-  versionKey: false,
-});
+);
 
 UserSchema.methods.checkPassword = function (password: string) {
   return bcrypt.compare(password, this.password);
@@ -67,7 +70,7 @@ UserSchema.set('toJSON', {
   transform: (_doc, ret, _options) => {
     delete ret.password;
     return ret;
-  }
+  },
 });
 
 const User = model<UserFields, UserModel>('User', UserSchema);

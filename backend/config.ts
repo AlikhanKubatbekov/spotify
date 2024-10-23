@@ -1,5 +1,5 @@
 import path from 'path';
-import {configDotenv} from 'dotenv';
+import { configDotenv } from 'dotenv';
 
 configDotenv();
 
@@ -11,10 +11,10 @@ const config = {
   mongoose: {
     db: 'mongodb://localhost/spotify',
   },
-  google:{
+  google: {
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  }
+  },
 };
 
 export default config;

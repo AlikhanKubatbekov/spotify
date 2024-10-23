@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import config from './config';
-import {randomUUID} from 'crypto';
+import { randomUUID } from 'crypto';
 import User from './models/User';
 import Artist from './models/Artist';
 import Album from './models/Album';
@@ -46,87 +46,90 @@ const run = async () => {
     await dropCollection(db, collection);
   }
 
-  await User.create({
-    email: 'John',
-    password: '123qwerty',
-    token: randomUUID(),
-    displayName: 'John',
-    avatar: null,
-    role: 'admin'
-  }, {
-    email: 'Jack',
-    password: 'qwerty123',
-    token: randomUUID(),
-    displayName: 'Jack',
-    avatar: null,
-    role: 'user'
-  });
+  await User.create(
+    {
+      email: 'John',
+      password: '123qwerty',
+      token: randomUUID(),
+      displayName: 'John',
+      avatar: null,
+      role: 'admin',
+    },
+    {
+      email: 'Jack',
+      password: 'qwerty123',
+      token: randomUUID(),
+      displayName: 'Jack',
+      avatar: null,
+      role: 'user',
+    },
+  );
 
-  const [
-    pastelGhostArtist,
-    seekaeArtist,
-    keshiArtist
-  ] = await Artist.create({
-    name: 'Pastel Ghost',
-    photo: 'fixtures/pastelGhostPhoto.jpeg',
-    information: `PASTEL GHOST is a synthpop artist from Oakland, California, and currently based in Austin, Texas. 
+  const [pastelGhostArtist, seekaeArtist, keshiArtist] = await Artist.create(
+    {
+      name: 'Pastel Ghost',
+      photo: 'fixtures/pastelGhostPhoto.jpeg',
+      information: `PASTEL GHOST is a synthpop artist from Oakland, California, and currently based in Austin, Texas. 
     She self-released two EPs, Dark Beach EP and Shadows EP, 
     before signing to 80s Ladies Records for the release of her debut full-length album, Abyss.`,
-    isPublished: true,
-  }, {
-    name: 'Seekae',
-    photo: 'fixtures/seekaePhoto.jpeg',
-    information: `Seekae was a Sydney-based electronic music group. 
+      isPublished: true,
+    },
+    {
+      name: 'Seekae',
+      photo: 'fixtures/seekaePhoto.jpeg',
+      information: `Seekae was a Sydney-based electronic music group. 
     They formed the group under the name Commander Keen in reference to the early-'90s MS-DOS video game series, 
     later changing the name to an elongated version of Commander Keen's initials (CK) after realising 
     the name was taken by a Scottish band. They released their debut album The Sound of Trees Falling 
     on People in 2008 and released the follow-up +Dome in 2011 and the EP 3 in 2012.`,
-    isPublished: true,
-  }, {
-    name: 'Keshi',
-    photo: 'fixtures/keshiPhoto.jpeg',
-    information: `Keshi is a Vietnamese-American artist under Island Records. 
+      isPublished: true,
+    },
+    {
+      name: 'Keshi',
+      photo: 'fixtures/keshiPhoto.jpeg',
+      information: `Keshi is a Vietnamese-American artist under Island Records. 
     In 2017, he had quit his nursing job to pursue music full time.`,
-    isPublished: false,
-  });
+      isPublished: false,
+    },
+  );
 
-  const [
-    abyssAlbum,
-    etherealityAlbum,
-    theWorryAlbum,
-    domeAlbum,
-    gabrielAlbum
-  ] = await Album.create({
-    title: 'Abyss',
-    artist: pastelGhostArtist,
-    publicDate: 2015,
-    albumImage: 'fixtures/abyssAlbumImage.jpeg',
-    isPublished: true,
-  }, {
-    title: 'Ethereality',
-    artist: pastelGhostArtist,
-    publicDate: 2018,
-    albumImage: 'fixtures/etherealityAlbumImage.jpeg',
-    isPublished: true,
-  }, {
-    title: 'The worry',
-    artist: seekaeArtist,
-    publicDate: 2014,
-    albumImage: 'fixtures/theWorryAlbumImage.jpeg',
-    isPublished: true,
-  }, {
-    title: '+Dome',
-    artist: seekaeArtist,
-    publicDate: 2011,
-    albumImage: 'fixtures/+domeAlbumImage.jpeg',
-    isPublished: true,
-  }, {
-    title: 'GABRIEL',
-    artist: keshiArtist,
-    publicDate: 2022,
-    albumImage: 'fixtures/gabrielAlbumImage.png',
-    isPublished: false,
-  });
+  const [abyssAlbum, etherealityAlbum, theWorryAlbum, domeAlbum, gabrielAlbum] = await Album.create(
+    {
+      title: 'Abyss',
+      artist: pastelGhostArtist,
+      publicDate: 2015,
+      albumImage: 'fixtures/abyssAlbumImage.jpeg',
+      isPublished: true,
+    },
+    {
+      title: 'Ethereality',
+      artist: pastelGhostArtist,
+      publicDate: 2018,
+      albumImage: 'fixtures/etherealityAlbumImage.jpeg',
+      isPublished: true,
+    },
+    {
+      title: 'The worry',
+      artist: seekaeArtist,
+      publicDate: 2014,
+      albumImage: 'fixtures/theWorryAlbumImage.jpeg',
+      isPublished: true,
+    },
+    {
+      title: '+Dome',
+      artist: seekaeArtist,
+      publicDate: 2011,
+      albumImage: 'fixtures/+domeAlbumImage.jpeg',
+      isPublished: true,
+    },
+    {
+      title: 'GABRIEL',
+      artist: keshiArtist,
+      publicDate: 2022,
+      albumImage: 'fixtures/gabrielAlbumImage.png',
+      isPublished: false,
+    },
+  );
 
   for (let trackNumber = 0; trackNumber < abyssTracksNames.length; trackNumber++) {
     await Track.create({

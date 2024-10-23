@@ -1,4 +1,4 @@
-import {Model, Schema} from 'mongoose';
+import { Model, Schema } from 'mongoose';
 
 export interface UserFields {
   email: string;
@@ -7,7 +7,7 @@ export interface UserFields {
   role: string;
   displayName: string;
   googleId?: string;
-  avatar: string | null
+  avatar: string | null;
 }
 
 export interface UserMethods {
@@ -61,9 +61,9 @@ export interface Track extends Document {
 }
 
 export interface TrackHistory extends Document {
-  _id: Schema.ObjectId,
+  _id: Schema.ObjectId;
   user: Schema.ObjectId;
   track: Schema.ObjectId;
   artist: Schema.ObjectId;
-  datetime: Date
+  datetime: Date;
 }

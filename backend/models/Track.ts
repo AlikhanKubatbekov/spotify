@@ -1,40 +1,43 @@
-import {model, Schema, Types} from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 import Album from './Album';
-import {Track} from '../types';
+import { Track } from '../types';
 
-const TrackSchema = new Schema<Track>({
-  trackNumber: {
-    type: Number,
-    required: true,
-    trim: true
+const TrackSchema = new Schema<Track>(
+  {
+    trackNumber: {
+      type: Number,
+      required: true,
+      trim: true,
+    },
+    trackName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    album: {
+      type: Schema.Types.ObjectId,
+      ref: 'Album',
+      required: true,
+      validate: {
+        validator: async (albumId: Types.ObjectId) => Album.findById(albumId),
+        message: 'Album does not exist',
+      },
+    },
+    trackDuration: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    isPublished: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
-  trackName: {
-    type: String,
-    required: true,
-    trim: true
+  {
+    versionKey: false,
   },
-  album: {
-    type: Schema.Types.ObjectId,
-    ref: 'Album',
-    required: true,
-    validate: {
-      validator: async (albumId: Types.ObjectId) => Album.findById(albumId),
-      message: 'Album does not exist',
-    }
-  },
-  trackDuration: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  isPublished: {
-    type: Boolean,
-    required: true,
-    default: false
-  }
-}, {
-  versionKey: false,
-});
+);
 
 const Track = model('Track', TrackSchema);
 

@@ -1,63 +1,59 @@
-import express, {NextFunction, Request, Response} from 'express';
-import {TrackMutation} from '../types';
+import express, { NextFunction, Request, Response } from 'express';
+import { TrackMutation } from '../types';
 import mongoose from 'mongoose';
-import auth, {RequestWithUser} from '../middleware/auth';
+import auth, { RequestWithUser } from '../middleware/auth';
 import Track from '../models/Track';
 import Artist from '../models/Artist';
 import permit from '../middleware/permit';
 
 const tracksRouter = express.Router();
 
-tracksRouter.post(
-  '/',
-  auth,
-  async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    try {
-      if (req.user) {
-        if (!req.body.trackNumber || !req.body.trackName || !req.body.album || !req.body.trackDuration) {
-          return res.status(400).send({error: 'Track number, name, album and track duration is required'});
-        }
-
-        const trackData: TrackMutation = {
-          trackNumber: req.body.trackNumber,
-          trackName: req.body.trackName,
-          album: req.body.album,
-          trackDuration: req.body.trackDuration,
-        };
-
-        const track = new Track(trackData);
-        await track.save();
-
-        return res.send(track);
-      }
-    } catch (e) {
-      if (e instanceof mongoose.Error.ValidationError) {
-        return res.status(422).json({error: e});
+tracksRouter.post('/', auth, async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  try {
+    if (req.user) {
+      if (!req.body.trackNumber || !req.body.trackName || !req.body.album || !req.body.trackDuration) {
+        return res.status(400).send({ error: 'Track number, name, album and track duration is required' });
       }
 
-      next(e);
+      const trackData: TrackMutation = {
+        trackNumber: req.body.trackNumber,
+        trackName: req.body.trackName,
+        album: req.body.album,
+        trackDuration: req.body.trackDuration,
+      };
+
+      const track = new Track(trackData);
+      await track.save();
+
+      return res.send(track);
     }
-  });
+  } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      return res.status(422).json({ error: e });
+    }
+
+    next(e);
+  }
+});
 
 tracksRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.query.album) {
       try {
         const albumQueryId = req.query.album as string;
-        const tracksFromAlbum = await Track
-          .find({album: albumQueryId})
+        const tracksFromAlbum = await Track.find({ album: albumQueryId })
           .populate({
             path: 'album',
             populate: {
               path: 'artist',
-              model: Artist
-            }
+              model: Artist,
+            },
           })
-          .sort({trackNumber: 1});
+          .sort({ trackNumber: 1 });
 
         return res.send(tracksFromAlbum);
       } catch (e) {
-        return res.status(404).send({error: 'Wrong album ObjectId'});
+        return res.status(404).send({ error: 'Wrong album ObjectId' });
       }
     } else {
       const tracks = await Track.find();
@@ -68,23 +64,19 @@ tracksRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
   }
 });
 
-tracksRouter.delete(
-  '/:id',
-  auth,
-  permit('admin'),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const trackId = req.params.id;
-      const track = await Track.findById(trackId);
+tracksRouter.delete('/:id', auth, permit('admin'), async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const trackId = req.params.id;
+    const track = await Track.findById(trackId);
 
-      if (!track) return res.status(404).send({error: 'Track not found!'});
+    if (!track) return res.status(404).send({ error: 'Track not found!' });
 
-      await Track.findByIdAndDelete({_id: trackId});
+    await Track.findByIdAndDelete({ _id: trackId });
 
-      return res.status(200).send({message: 'Deleted successfully.'});
-    } catch (e) {
-      next(e);
-    }
-  });
+    return res.status(200).send({ message: 'Deleted successfully.' });
+  } catch (e) {
+    next(e);
+  }
+});
 
 export default tracksRouter;
