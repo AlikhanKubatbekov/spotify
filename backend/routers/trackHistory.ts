@@ -1,15 +1,18 @@
-import express, { NextFunction, Response } from 'express';
-import { Error } from 'mongoose';
+import { Router, NextFunction, Response } from 'express';
 import dayjs from 'dayjs';
-import TrackHistory from '../models/TrackHistory';
+import { Error } from 'mongoose';
 import auth, { RequestWithUser } from '../middleware/auth';
+import TrackHistory from '../models/TrackHistory';
 import Artist from '../models/Artist';
 import Track from '../models/Track';
 import { Album } from '../types';
 
-const trackHistoryRouter = express.Router();
+const trackHistoryRouter = Router();
 
-trackHistoryRouter.post('/', auth, async (req: RequestWithUser, res: Response, next: NextFunction) => {
+trackHistoryRouter.post('/', auth, addTrackToHistory);
+trackHistoryRouter.get('/', auth, getTrackHistory);
+
+async function addTrackToHistory(req: RequestWithUser, res: Response, next: NextFunction) {
   if (!req.body.track) {
     return res.status(400).json({ error: 'Track id must be present in request!' });
   }
@@ -49,9 +52,9 @@ trackHistoryRouter.post('/', auth, async (req: RequestWithUser, res: Response, n
 
     next(e);
   }
-});
+}
 
-trackHistoryRouter.get('/', auth, async (req: RequestWithUser, res: Response, next: NextFunction) => {
+async function getTrackHistory(req: RequestWithUser, res: Response, next: NextFunction) {
   try {
     if (req.user) {
       const trackHistories = await TrackHistory.find({ user: req.user._id })
@@ -87,6 +90,6 @@ trackHistoryRouter.get('/', auth, async (req: RequestWithUser, res: Response, ne
   } catch (e) {
     next(e);
   }
-});
+}
 
 export default trackHistoryRouter;

@@ -1,15 +1,20 @@
-import express, { NextFunction, Request, Response } from 'express';
+import { Router, NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
-import auth, { RequestWithUser } from '../middleware/auth';
 import { imagesUpload } from '../multer';
+import auth, { RequestWithUser } from '../middleware/auth';
+import permit from '../middleware/permit';
 import Album from '../models/Album';
 import { AlbumMutation } from '../types';
-import permit from '../middleware/permit';
 
-const albumsRouter = express.Router();
+const albumsRouter = Router();
 
-albumsRouter.post('/', auth, imagesUpload.single('albumImage'), async (req: RequestWithUser, res: Response, next: NextFunction) => {
+albumsRouter.post('/', auth, imagesUpload.single('albumImage'), createAlbum);
+albumsRouter.get('/', getAlbums);
+albumsRouter.get('/:id', getAlbum);
+albumsRouter.delete('/:id', auth, permit('admin'), removeAlbum);
+
+async function createAlbum(req: RequestWithUser, res: Response, next: NextFunction) {
   try {
     if (req.user) {
       if (!req.body.title || !req.body.artist || !req.body.publicDate) {
@@ -35,9 +40,9 @@ albumsRouter.post('/', auth, imagesUpload.single('albumImage'), async (req: Requ
 
     next(e);
   }
-});
+}
 
-albumsRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
+async function getAlbums(req: Request, res: Response, next: NextFunction) {
   try {
     if (req.query.artist) {
       try {
@@ -58,9 +63,9 @@ albumsRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
   } catch (e) {
     next(e);
   }
-});
+}
 
-albumsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+async function getAlbum(req: Request, res: Response, next: NextFunction) {
   try {
     let _id: ObjectId;
     try {
@@ -79,9 +84,9 @@ albumsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction)
   } catch (e) {
     next(e);
   }
-});
+}
 
-albumsRouter.delete('/:id', auth, permit('admin'), async (req: Request, res: Response, next: NextFunction) => {
+async function removeAlbum(req: Request, res: Response, next: NextFunction) {
   try {
     const albumId = req.params.id;
     const album = await Album.findById(albumId);
@@ -94,6 +99,6 @@ albumsRouter.delete('/:id', auth, permit('admin'), async (req: Request, res: Res
   } catch (e) {
     next(e);
   }
-});
+}
 
 export default albumsRouter;

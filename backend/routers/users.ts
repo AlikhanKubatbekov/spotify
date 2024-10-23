@@ -1,14 +1,19 @@
-import express, { NextFunction, Request, Response } from 'express';
+import { Router, NextFunction, Request, Response } from 'express';
 import { Error, mongo } from 'mongoose';
-import User from '../models/User';
 import { OAuth2Client } from 'google-auth-library';
 import config from '../config';
 import { imagesUpload } from '../multer';
+import User from '../models/User';
 
-const usersRouter = express.Router();
+const usersRouter = Router();
 const client = new OAuth2Client(config.google.clientId);
 
-usersRouter.post('/', imagesUpload.single('avatar'), async (req: Request, res: Response, next: NextFunction) => {
+usersRouter.post('/', imagesUpload.single('avatar'), createUser);
+usersRouter.post('/google', googleAuth);
+usersRouter.post('/sessions', loginUser);
+usersRouter.delete('/sessions', removeUser);
+
+async function createUser(req: Request, res: Response, next: NextFunction) {
   try {
     const user = new User({
       email: req.body.email,
@@ -32,9 +37,9 @@ usersRouter.post('/', imagesUpload.single('avatar'), async (req: Request, res: R
 
     next(e);
   }
-});
+}
 
-usersRouter.post('/google', async (req: Request, res: Response, next: NextFunction) => {
+async function googleAuth(req: Request, res: Response, next: NextFunction) {
   try {
     const ticket = await client.verifyIdToken({
       idToken: req.body.credential,
@@ -75,9 +80,9 @@ usersRouter.post('/google', async (req: Request, res: Response, next: NextFuncti
   } catch (e) {
     return next(e);
   }
-});
+}
 
-usersRouter.post('/sessions', async (req: Request, res: Response, next: NextFunction) => {
+async function loginUser(req: Request, res: Response, next: NextFunction) {
   try {
     const user = await User.findOne({ email: req.body.email });
 
@@ -99,9 +104,9 @@ usersRouter.post('/sessions', async (req: Request, res: Response, next: NextFunc
   } catch (e) {
     next(e);
   }
-});
+}
 
-usersRouter.delete('/sessions', async (req: Request, res: Response, next: NextFunction) => {
+async function removeUser(req: Request, res: Response, next: NextFunction) {
   try {
     const headerValue = req.get('Authorization');
     const success = { message: 'Successfully logout!' };
@@ -121,6 +126,6 @@ usersRouter.delete('/sessions', async (req: Request, res: Response, next: NextFu
   } catch (e) {
     return next(e);
   }
-});
+}
 
 export default usersRouter;

@@ -1,14 +1,18 @@
-import express, { NextFunction, Request, Response } from 'express';
-import { TrackMutation } from '../types';
+import { Router, NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
-import auth, { RequestWithUser } from '../middleware/auth';
 import Track from '../models/Track';
 import Artist from '../models/Artist';
+import auth, { RequestWithUser } from '../middleware/auth';
 import permit from '../middleware/permit';
+import { TrackMutation } from '../types';
 
-const tracksRouter = express.Router();
+const tracksRouter = Router();
 
-tracksRouter.post('/', auth, async (req: RequestWithUser, res: Response, next: NextFunction) => {
+tracksRouter.post('/', auth, createTrack);
+tracksRouter.get('/', getTracks);
+tracksRouter.delete('/:id', auth, permit('admin'), removeTrack);
+
+async function createTrack(req: RequestWithUser, res: Response, next: NextFunction) {
   try {
     if (req.user) {
       if (!req.body.trackNumber || !req.body.trackName || !req.body.album || !req.body.trackDuration) {
@@ -34,9 +38,9 @@ tracksRouter.post('/', auth, async (req: RequestWithUser, res: Response, next: N
 
     next(e);
   }
-});
+}
 
-tracksRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
+async function getTracks(req: Request, res: Response, next: NextFunction) {
   try {
     if (req.query.album) {
       try {
@@ -62,9 +66,9 @@ tracksRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
   } catch (e) {
     next(e);
   }
-});
+}
 
-tracksRouter.delete('/:id', auth, permit('admin'), async (req: Request, res: Response, next: NextFunction) => {
+async function removeTrack(req: Request, res: Response, next: NextFunction) {
   try {
     const trackId = req.params.id;
     const track = await Track.findById(trackId);
@@ -77,6 +81,6 @@ tracksRouter.delete('/:id', auth, permit('admin'), async (req: Request, res: Res
   } catch (e) {
     next(e);
   }
-});
+}
 
 export default tracksRouter;

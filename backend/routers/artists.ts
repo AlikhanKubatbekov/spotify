@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import { Router, NextFunction, Request, Response } from 'express';
 import Artist from '../models/Artist';
 import auth, { RequestWithUser } from '../middleware/auth';
 import { imagesUpload } from '../multer';
@@ -6,9 +6,14 @@ import { ObjectId } from 'mongodb';
 import { ArtistMutation } from '../types';
 import permit from '../middleware/permit';
 
-const artistsRouter = express.Router();
+const artistsRouter = Router();
 
-artistsRouter.post('/', auth, imagesUpload.single('photo'), async (req: RequestWithUser, res: Response, next: NextFunction) => {
+artistsRouter.post('/', auth, imagesUpload.single('photo'), createArtist);
+artistsRouter.get('/', getArtists);
+artistsRouter.get('/:id', getArtist);
+artistsRouter.delete('/:id', auth, permit('admin'), removeArtist);
+
+async function createArtist(req: RequestWithUser, res: Response, next: NextFunction) {
   try {
     if (req.user) {
       if (!req.body.name) {
@@ -29,18 +34,18 @@ artistsRouter.post('/', auth, imagesUpload.single('photo'), async (req: RequestW
   } catch (e) {
     next(e);
   }
-});
+}
 
-artistsRouter.get('/', async (_req: Request, res: Response, next: NextFunction) => {
+async function getArtists(_req: Request, res: Response, next: NextFunction) {
   try {
     const artists = await Artist.find();
     return res.send(artists);
   } catch (e) {
     next(e);
   }
-});
+}
 
-artistsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+async function getArtist(req: Request, res: Response, next: NextFunction) {
   let _id: ObjectId;
 
   try {
@@ -63,9 +68,9 @@ artistsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction
   } catch (e) {
     next(e);
   }
-});
+}
 
-artistsRouter.delete('/:id', auth, permit('admin'), async (req: Request, res: Response, next: NextFunction) => {
+async function removeArtist(req: Request, res: Response, next: NextFunction) {
   try {
     const artistId = req.params.id;
     const artist = await Artist.findById(artistId);
@@ -78,6 +83,6 @@ artistsRouter.delete('/:id', auth, permit('admin'), async (req: Request, res: Re
   } catch (e) {
     next(e);
   }
-});
+}
 
 export default artistsRouter;
