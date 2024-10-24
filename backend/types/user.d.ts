@@ -1,4 +1,4 @@
-import { HydratedDocument, Model, Schema } from 'mongoose';
+import { HydratedDocument, Model } from 'mongoose';
 import { Request } from 'express';
 
 export interface IUserFields {

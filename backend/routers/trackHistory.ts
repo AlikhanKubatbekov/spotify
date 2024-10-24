@@ -5,6 +5,7 @@ import auth from '../middleware/auth';
 import TrackHistory from '../models/TrackHistory';
 import Track from '../models/Track';
 import { IRequestWithUser } from '../types/user';
+import { ITrackHistory } from '../types/trackHistory';
 import { ITrack } from '../types/track';
 import { IAlbum } from '../types/album';
 import { IArtist } from '../types/artist';
@@ -71,8 +72,8 @@ async function getTrackHistory(req: IRequestWithUser, res: Response, next: NextF
         })
         .exec();
 
-      const formatTrackHistoryDates = (trackHistories: TrackHistory[]) => {
-        return trackHistories.map((trackHistory: TrackHistory) => {
+      const formatTrackHistoryDates = (trackHistories: ITrackHistory[]) => {
+        return trackHistories.map((trackHistory: ITrackHistory) => {
           const { _id, user, track, artist, datetime } = trackHistory;
           return {
             _id,
