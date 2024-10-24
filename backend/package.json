@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "dev": "nodemon index.ts",
     "seed": "ts-node fixtures.ts",
     "lint": "eslint --debug ./",

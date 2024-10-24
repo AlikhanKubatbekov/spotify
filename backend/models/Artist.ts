@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { Artist } from '../types';
+import { IArtist } from '../types/artist';
 
-const ArtistSchema = new Schema<Artist>(
+const ArtistSchema = new Schema<IArtist>(
   {
     name: {
       type: String,

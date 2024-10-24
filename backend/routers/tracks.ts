@@ -2,9 +2,10 @@ import { Router, NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Track from '../models/Track';
 import Artist from '../models/Artist';
-import auth, { RequestWithUser } from '../middleware/auth';
+import auth from '../middleware/auth';
 import permit from '../middleware/permit';
-import { TrackMutation } from '../types';
+import { IRequestWithUser } from '../types/user';
+import { ITrackMutation } from '../types/track';
 
 const tracksRouter = Router();
 
@@ -12,14 +13,14 @@ tracksRouter.post('/', auth, createTrack);
 tracksRouter.get('/', getTracks);
 tracksRouter.delete('/:id', auth, permit('admin'), removeTrack);
 
-async function createTrack(req: RequestWithUser, res: Response, next: NextFunction) {
+async function createTrack(req: IRequestWithUser, res: Response, next: NextFunction) {
   try {
     if (req.user) {
       if (!req.body.trackNumber || !req.body.trackName || !req.body.album || !req.body.trackDuration) {
         return res.status(400).send({ error: 'Track number, name, album and track duration is required' });
       }
 
-      const trackData: TrackMutation = {
+      const trackData: ITrackMutation = {
         trackNumber: req.body.trackNumber,
         trackName: req.body.trackName,
         album: req.body.album,

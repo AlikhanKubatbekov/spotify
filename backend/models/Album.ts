@@ -1,8 +1,8 @@
-import { Schema, model, Types } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 import Artist from './Artist';
-import { Album } from '../types';
+import { IAlbum } from '../types/album';
 
-const AlbumSchema = new Schema<Album>(
+const AlbumSchema = new Schema<IAlbum>(
   {
     title: {
       type: String,

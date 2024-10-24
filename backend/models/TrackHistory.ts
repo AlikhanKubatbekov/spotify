@@ -2,9 +2,9 @@ import { Schema, model, Types } from 'mongoose';
 import User from './User';
 import Track from './Track';
 import Artist from './Artist';
-import { TrackHistory } from '../types';
+import { ITrackHistory } from '../types/trackHistory';
 
-const TrackHistorySchema = new Schema<TrackHistory>(
+const TrackHistorySchema = new Schema<ITrackHistory>(
   {
     user: {
       type: Schema.Types.ObjectId,

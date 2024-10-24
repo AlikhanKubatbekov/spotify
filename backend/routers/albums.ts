@@ -2,10 +2,11 @@ import { Router, NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { imagesUpload } from '../multer';
-import auth, { RequestWithUser } from '../middleware/auth';
+import auth from '../middleware/auth';
 import permit from '../middleware/permit';
 import Album from '../models/Album';
-import { AlbumMutation } from '../types';
+import { IRequestWithUser } from '../types/user';
+import { IAlbumMutation } from '../types/album';
 
 const albumsRouter = Router();
 
@@ -14,14 +15,14 @@ albumsRouter.get('/', getAlbums);
 albumsRouter.get('/:id', getAlbum);
 albumsRouter.delete('/:id', auth, permit('admin'), removeAlbum);
 
-async function createAlbum(req: RequestWithUser, res: Response, next: NextFunction) {
+async function createAlbum(req: IRequestWithUser, res: Response, next: NextFunction) {
   try {
     if (req.user) {
       if (!req.body.title || !req.body.artist || !req.body.publicDate) {
         return res.status(400).json({ error: 'Title, artist and public date of album must be present in the request' });
       }
 
-      const albumData: AlbumMutation = {
+      const albumData: IAlbumMutation = {
         title: req.body.title,
         artist: req.body.artist,
         publicDate: req.body.publicDate,

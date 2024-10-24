@@ -1,18 +1,20 @@
-import { Router, NextFunction, Response } from 'express';
+import { NextFunction, Response, Router } from 'express';
 import dayjs from 'dayjs';
 import { Error } from 'mongoose';
-import auth, { RequestWithUser } from '../middleware/auth';
+import auth from '../middleware/auth';
 import TrackHistory from '../models/TrackHistory';
-import Artist from '../models/Artist';
 import Track from '../models/Track';
-import { Album } from '../types';
+import { IRequestWithUser } from '../types/user';
+import { ITrack } from '../types/track';
+import { IAlbum } from '../types/album';
+import { IArtist } from '../types/artist';
 
 const trackHistoryRouter = Router();
 
 trackHistoryRouter.post('/', auth, addTrackToHistory);
 trackHistoryRouter.get('/', auth, getTrackHistory);
 
-async function addTrackToHistory(req: RequestWithUser, res: Response, next: NextFunction) {
+async function addTrackToHistory(req: IRequestWithUser, res: Response, next: NextFunction) {
   if (!req.body.track) {
     return res.status(400).json({ error: 'Track id must be present in request!' });
   }
@@ -27,7 +29,7 @@ async function addTrackToHistory(req: RequestWithUser, res: Response, next: Next
           select: '_id',
         },
       })
-      .exec()) as Track & { album: Album & { artist: Artist } };
+      .exec()) as ITrack & { album: IAlbum & { artist: IArtist } };
 
     if (!track) return res.status(400).json({ error: 'Track not found' });
 
@@ -54,7 +56,7 @@ async function addTrackToHistory(req: RequestWithUser, res: Response, next: Next
   }
 }
 
-async function getTrackHistory(req: RequestWithUser, res: Response, next: NextFunction) {
+async function getTrackHistory(req: IRequestWithUser, res: Response, next: NextFunction) {
   try {
     if (req.user) {
       const trackHistories = await TrackHistory.find({ user: req.user._id })

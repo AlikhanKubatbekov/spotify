@@ -1,8 +1,8 @@
 import { model, Schema, Types } from 'mongoose';
 import Album from './Album';
-import { Track } from '../types';
+import {ITrack} from '../types/track';
 
-const TrackSchema = new Schema<Track>(
+const TrackSchema = new Schema<ITrack>(
   {
     trackNumber: {
       type: Number,

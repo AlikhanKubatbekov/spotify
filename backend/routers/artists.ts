@@ -1,10 +1,11 @@
 import { Router, NextFunction, Request, Response } from 'express';
 import Artist from '../models/Artist';
-import auth, { RequestWithUser } from '../middleware/auth';
+import auth from '../middleware/auth';
 import { imagesUpload } from '../multer';
 import { ObjectId } from 'mongodb';
-import { ArtistMutation } from '../types';
 import permit from '../middleware/permit';
+import { IRequestWithUser } from '../types/user';
+import { IArtistMutation } from '../types/artist';
 
 const artistsRouter = Router();
 
@@ -13,14 +14,14 @@ artistsRouter.get('/', getArtists);
 artistsRouter.get('/:id', getArtist);
 artistsRouter.delete('/:id', auth, permit('admin'), removeArtist);
 
-async function createArtist(req: RequestWithUser, res: Response, next: NextFunction) {
+async function createArtist(req: IRequestWithUser, res: Response, next: NextFunction) {
   try {
     if (req.user) {
       if (!req.body.name) {
         return res.status(400).json({ error: 'Name of artist must be present in the request' });
       }
 
-      const artistData: ArtistMutation = {
+      const artistData: IArtistMutation = {
         name: req.body.name,
         photo: req.file ? req.file.filename : null,
         information: req.body.information,

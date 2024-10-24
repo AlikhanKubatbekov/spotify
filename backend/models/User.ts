@@ -1,21 +1,21 @@
 import { HydratedDocument, model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { UserFields, UserMethods, UserModel } from '../types';
 import { randomUUID } from 'crypto';
+import { IUserFields, IUserMethods, UserModel } from '../types/user';
 
 const SALT_WORK_FACTOR = 10;
 
-const UserSchema = new Schema<UserFields, UserModel, UserMethods>(
+const UserSchema = new Schema<IUserFields, UserModel, IUserMethods>(
   {
     email: {
       type: String,
       required: true,
       unique: true,
       validate: {
-        validator: async function (this: HydratedDocument<UserFields>, email: string): Promise<boolean> {
+        validator: async function (this: HydratedDocument<IUserFields>, email: string): Promise<boolean> {
           if (!this.isModified('email')) return true;
 
-          const user: HydratedDocument<UserFields> | null = await User.findOne({ email });
+          const user: HydratedDocument<IUserFields> | null = await User.findOne({ email });
           return !Boolean(user);
         },
         message: 'This user is already registered!',
@@ -73,6 +73,6 @@ UserSchema.set('toJSON', {
   },
 });
 
-const User = model<UserFields, UserModel>('User', UserSchema);
+const User = model<IUserFields, UserModel>('User', UserSchema);
 
 export default User;
