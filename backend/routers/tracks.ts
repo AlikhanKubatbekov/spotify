@@ -1,4 +1,4 @@
-import { Router, NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import mongoose from 'mongoose';
 import Track from '../models/Track';
 import Artist from '../models/Artist';
@@ -11,6 +11,7 @@ const tracksRouter = Router();
 
 tracksRouter.post('/', auth, createTrack);
 tracksRouter.get('/', getTracks);
+tracksRouter.patch(':id', auth, permit('admin'), togglePublished);
 tracksRouter.delete('/:id', auth, permit('admin'), removeTrack);
 
 async function createTrack(req: IRequestWithUser, res: Response, next: NextFunction) {
@@ -64,6 +65,34 @@ async function getTracks(req: Request, res: Response, next: NextFunction) {
       const tracks = await Track.find();
       return res.send(tracks);
     }
+  } catch (e) {
+    next(e);
+  }
+}
+
+async function togglePublished(req: Request, res: Response, next: NextFunction) {
+  try {
+    const trackId = req.params.id;
+    const track = await Track.findById(trackId);
+
+    if (!track) return res.status(404).send({ error: 'Track not found!' });
+
+    const publishedTrack = await Track.updateOne(
+      {
+        _id: trackId,
+      },
+      {
+        $set: {
+          isPublished: !track.isPublished,
+        },
+      },
+    );
+
+    if (publishedTrack.matchedCount === 0) {
+      return res.status(404).send({ error: 'Track not found!' });
+    }
+
+    return res.send({ message: 'Track successfully published!', publishedTrack });
   } catch (e) {
     next(e);
   }

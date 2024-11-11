@@ -49,7 +49,7 @@ const run = async () => {
   await User.create(
     {
       email: 'John',
-      password: '123qwerty',
+      password: '1',
       token: randomUUID(),
       displayName: 'John',
       avatar: null,
@@ -57,7 +57,7 @@ const run = async () => {
     },
     {
       email: 'Jack',
-      password: 'qwerty123',
+      password: '1',
       token: randomUUID(),
       displayName: 'Jack',
       avatar: null,

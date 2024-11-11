@@ -11,7 +11,7 @@ const client = new OAuth2Client(config.google.clientId);
 usersRouter.post('/', imagesUpload.single('avatar'), createUser);
 usersRouter.post('/google', googleAuth);
 usersRouter.post('/sessions', loginUser);
-usersRouter.delete('/sessions', removeUser);
+usersRouter.delete('/sessions', logoutUser);
 
 async function createUser(req: Request, res: Response, next: NextFunction) {
   try {
@@ -106,7 +106,7 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function removeUser(req: Request, res: Response, next: NextFunction) {
+async function logoutUser(req: Request, res: Response, next: NextFunction) {
   try {
     const headerValue = req.get('Authorization');
     const success = { message: 'Successfully logout!' };

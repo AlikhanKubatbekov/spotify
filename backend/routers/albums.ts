@@ -1,4 +1,4 @@
-import { Router, NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { imagesUpload } from '../multer';
@@ -13,6 +13,7 @@ const albumsRouter = Router();
 albumsRouter.post('/', auth, imagesUpload.single('albumImage'), createAlbum);
 albumsRouter.get('/', getAlbums);
 albumsRouter.get('/:id', getAlbum);
+albumsRouter.patch(':id', auth, permit('admin'), togglePublished);
 albumsRouter.delete('/:id', auth, permit('admin'), removeAlbum);
 
 async function createAlbum(req: IRequestWithUser, res: Response, next: NextFunction) {
@@ -82,6 +83,34 @@ async function getAlbum(req: Request, res: Response, next: NextFunction) {
     }
 
     return res.send(album);
+  } catch (e) {
+    next(e);
+  }
+}
+
+async function togglePublished(req: Request, res: Response, next: NextFunction) {
+  try {
+    const albumId = req.params.id;
+    const album = await Album.findById(albumId);
+
+    if (!album) return res.status(404).send({ error: 'Album not found!' });
+
+    const publishedAlbum = await Album.updateOne(
+      {
+        _id: albumId,
+      },
+      {
+        $set: {
+          isPublished: !album.isPublished,
+        },
+      },
+    );
+
+    if (publishedAlbum.matchedCount === 0) {
+      return res.status(404).send({ error: 'Album not found!' });
+    }
+
+    return res.send({ message: 'Album successfully published!', publishedAlbum });
   } catch (e) {
     next(e);
   }

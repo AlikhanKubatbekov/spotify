@@ -1,4 +1,4 @@
-import { Router, NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import Artist from '../models/Artist';
 import auth from '../middleware/auth';
 import { imagesUpload } from '../multer';
@@ -12,6 +12,7 @@ const artistsRouter = Router();
 artistsRouter.post('/', auth, imagesUpload.single('photo'), createArtist);
 artistsRouter.get('/', getArtists);
 artistsRouter.get('/:id', getArtist);
+artistsRouter.patch('/:id', auth, permit('admin'), togglePublished);
 artistsRouter.delete('/:id', auth, permit('admin'), removeArtist);
 
 async function createArtist(req: IRequestWithUser, res: Response, next: NextFunction) {
@@ -66,6 +67,34 @@ async function getArtist(req: Request, res: Response, next: NextFunction) {
     }
 
     return res.send(artist);
+  } catch (e) {
+    next(e);
+  }
+}
+
+async function togglePublished(req: Request, res: Response, next: NextFunction) {
+  try {
+    const artistId = req.params.id;
+    const artist = await Artist.findById(artistId);
+
+    if (!artist) return res.status(404).send({ error: 'Artist not found!' });
+
+    const publishedArtist = await Artist.updateOne(
+      {
+        _id: artistId,
+      },
+      {
+        $set: {
+          isPublished: !artist.isPublished,
+        },
+      },
+    );
+
+    if (publishedArtist.matchedCount === 0) {
+      return res.status(404).send({ error: 'Artist not found!' });
+    }
+
+    return res.send({ message: 'Artist successfully published!', publishedArtist });
   } catch (e) {
     next(e);
   }
