@@ -1,12 +1,10 @@
 import React from 'react';
 import CustomDrawer from '../CustomDrawer/CustomDrawer';
 
-const Layout: React.FC<React.PropsWithChildren> = ({children}) => {
+const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <>
-      <CustomDrawer>
-        {children}
-      </CustomDrawer>
+      <CustomDrawer>{children}</CustomDrawer>
     </>
   );
 };

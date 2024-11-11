@@ -1,7 +1,7 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {RootState} from '../../../app/store';
-import {Track} from '../../../types';
-import {fetchTracksByAlbums} from './tracksThunk';
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../../../app/store';
+import { fetchTracksByAlbums } from './tracksThunk';
+import { Track } from '../../../types/track';
 
 interface TracksState {
   itemsByAlbum: Track[];
@@ -17,15 +17,18 @@ export const tracksSlice = createSlice({
   name: 'tracks',
   initialState,
   reducers: {},
-  extraReducers: builder => {
-    builder.addCase(fetchTracksByAlbums.pending, (state) => {
-      state.fetchLoading = true;
-    }).addCase(fetchTracksByAlbums.fulfilled, (state, {payload: tracks}) => {
-      state.fetchLoading = false;
-      state.itemsByAlbum = tracks;
-    }).addCase(fetchTracksByAlbums.rejected, (state) => {
-      state.fetchLoading = false;
-    });
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTracksByAlbums.pending, (state) => {
+        state.fetchLoading = true;
+      })
+      .addCase(fetchTracksByAlbums.fulfilled, (state, { payload: tracks }) => {
+        state.fetchLoading = false;
+        state.itemsByAlbum = tracks;
+      })
+      .addCase(fetchTracksByAlbums.rejected, (state) => {
+        state.fetchLoading = false;
+      });
   },
 });
 

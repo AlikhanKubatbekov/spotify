@@ -12,7 +12,7 @@ const tracksHistoryClasses = {
     },
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    }
+    },
   },
   listItemButton: {
     padding: '3px 0',
@@ -21,8 +21,8 @@ const tracksHistoryClasses = {
     [darkTheme.breakpoints.only('xs')]: {
       padding: '2px 0',
       marginBottom: '3px',
-      border: '1px solid rgb(204, 204, 204, 0.5)'
-    }
+      border: '1px solid rgb(204, 204, 204, 0.5)',
+    },
   },
   datetimeBlock: {
     display: 'inline-block',
@@ -36,21 +36,21 @@ const tracksHistoryClasses = {
       borderBottom: '1px solid #fff',
       margin: '0',
       padding: '0 0 2px 5px',
-      fontSize: 'inherit'
-    }
+      fontSize: 'inherit',
+    },
   },
   trackNameAndArtistBlock: {
     display: 'inline-block',
     [darkTheme.breakpoints.only('xs')]: {
-      padding: '2px 0 0 5px'
-    }
+      padding: '2px 0 0 5px',
+    },
   },
   listItemInner: {
     [darkTheme.breakpoints.only('xs')]: {
       display: 'flex',
-      flexDirection: 'column'
-    }
-  }
+      flexDirection: 'column',
+    },
+  },
 };
 
 export default tracksHistoryClasses;

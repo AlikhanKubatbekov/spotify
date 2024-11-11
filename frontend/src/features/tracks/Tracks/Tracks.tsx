@@ -1,21 +1,12 @@
-import React, {useEffect} from 'react';
-import {useSearchParams} from 'react-router-dom';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {selectTracksByAlbum} from './tracksSlice';
-import {selectUser} from '../../users/usersSlice';
-import {fetchTracksByAlbums} from './tracksThunk';
-import {addTrackToHistory} from '../TracksHistories/tracksHistoriesThunk';
-import {apiURL} from '../../../constans';
-import {
-  Avatar,
-  Grid,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-  Typography
-} from '@mui/material';
+import React, { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectTracksByAlbum } from './tracksSlice';
+import { selectUser } from '../../users/usersSlice';
+import { fetchTracksByAlbums } from './tracksThunk';
+import { addTrackToHistory } from '../TracksHistories/tracksHistoriesThunk';
+import { apiURL } from '../../../constans';
+import { Avatar, Grid, List, ListItemButton, ListItemIcon, ListItemSecondaryAction, ListItemText, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import tracksClasses from './tracksClasses';
 
@@ -38,17 +29,14 @@ const Tracks: React.FC = () => {
 
   const albumImage = tracksByAlbum.length > 0 && {
     src: tracksByAlbum[0].album.albumImage,
-    alt: tracksByAlbum[0].album.title
+    alt: tracksByAlbum[0].album.title,
   };
 
   const albumOwner = tracksByAlbum.length > 0 && tracksByAlbum[0].album.artist.name;
   const albumName = tracksByAlbum.length > 0 && tracksByAlbum[0].album.title;
 
   const noTracksAvailable = (
-    <Typography
-      component="p"
-      variant="h4"
-    >
+    <Typography component="p" variant="h4">
       There is not a single track on this album!
     </Typography>
   );
@@ -59,33 +47,17 @@ const Tracks: React.FC = () => {
         noTracksAvailable
       ) : (
         <>
-          <Grid
-            sx={tracksClasses.gridContainer}
-            container
-            spacing={4}
-          >
+          <Grid sx={tracksClasses.gridContainer} container spacing={4}>
             <Grid item md={4}>
               {albumImage && albumImage.src && (
-                <Avatar
-                  variant="square"
-                  src={apiURL + '/' + albumImage.src}
-                  alt={albumImage.alt}
-                  sx={tracksClasses.albumImage}
-                />
+                <Avatar variant="square" src={apiURL + '/' + albumImage.src} alt={albumImage.alt} sx={tracksClasses.albumImage} />
               )}
             </Grid>
             <Grid item md={8}>
-              <Typography
-                component="h2"
-                variant="h2"
-                sx={tracksClasses.artistName}
-              >
+              <Typography component="h2" variant="h2" sx={tracksClasses.artistName}>
                 {albumOwner}
               </Typography>
-              <Typography
-                variant="h5"
-                sx={tracksClasses.albumName}
-              >
+              <Typography variant="h5" sx={tracksClasses.albumName}>
                 {albumName}
               </Typography>
             </Grid>
@@ -93,35 +65,24 @@ const Tracks: React.FC = () => {
               <Typography variant="h3" gutterBottom>
                 Tracks:
               </Typography>
-              <List style={{width: '100%'}}>
+              <List style={{ width: '100%' }}>
                 {tracksByAlbum.map((track) => (
-                  <ListItemButton
-                    key={track._id}
-                    alignItems="center"
-                  >
+                  <ListItemButton key={track._id} alignItems="center">
                     <ListItemButton
                       sx={{
                         flexBasis: '60px',
-                        flexGrow: '0'
+                        flexGrow: '0',
                       }}
                       onClick={user ? () => addTrackToHistoryHandler(track._id) : undefined}
                     >
                       <ListItemIcon>
-                        <PlayArrowIcon/>
+                        <PlayArrowIcon />
                       </ListItemIcon>
                     </ListItemButton>
-                    <ListItemText
-                      primary={
-                        <>
-                          {track.trackNumber}.
-                        </>
-                      }
-                      secondary={track.trackName}
-                      disableTypography
-                    />
+                    <ListItemText primary={<>{track.trackNumber}.</>} secondary={track.trackName} disableTypography />
                     <ListItemSecondaryAction
                       style={{
-                        opacity: '0.5'
+                        opacity: '0.5',
                       }}
                     >
                       {track.trackDuration}

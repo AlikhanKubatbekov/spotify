@@ -1,7 +1,7 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {addTrackToHistory, fetchTracksHistories} from './tracksHistoriesThunk';
-import {RootState} from '../../../app/store';
-import {TrackListenedTo} from '../../../types';
+import { createSlice } from '@reduxjs/toolkit';
+import { addTrackToHistory, fetchTracksHistories } from './tracksHistoriesThunk';
+import { RootState } from '../../../app/store';
+import { TrackListenedTo } from '../../../types/trackHistory';
 
 interface TracksListenedToState {
   items: TrackListenedTo[];
@@ -19,24 +19,30 @@ export const tracksHistoriesSlice = createSlice({
   name: 'tracksListenedTo',
   initialState,
   reducers: {},
-  extraReducers: builder => {
-    builder.addCase(addTrackToHistory.pending, (state) => {
-      state.addTrackToHistoryLoading = true;
-    }).addCase(addTrackToHistory.fulfilled, (state) => {
-      state.addTrackToHistoryLoading = false;
-    }).addCase(addTrackToHistory.rejected, (state) => {
-      state.addTrackToHistoryLoading = false;
-    });
+  extraReducers: (builder) => {
+    builder
+      .addCase(addTrackToHistory.pending, (state) => {
+        state.addTrackToHistoryLoading = true;
+      })
+      .addCase(addTrackToHistory.fulfilled, (state) => {
+        state.addTrackToHistoryLoading = false;
+      })
+      .addCase(addTrackToHistory.rejected, (state) => {
+        state.addTrackToHistoryLoading = false;
+      });
 
-    builder.addCase(fetchTracksHistories.pending, (state) => {
-      state.fetchTracksHistoriesLoading = true;
-    }).addCase(fetchTracksHistories.fulfilled, (state, {payload: trackHistory}) => {
-      state.fetchTracksHistoriesLoading = false;
-      state.items = trackHistory;
-    }).addCase(fetchTracksHistories.rejected, (state) => {
-      state.fetchTracksHistoriesLoading = false;
-    });
-  }
+    builder
+      .addCase(fetchTracksHistories.pending, (state) => {
+        state.fetchTracksHistoriesLoading = true;
+      })
+      .addCase(fetchTracksHistories.fulfilled, (state, { payload: trackHistory }) => {
+        state.fetchTracksHistoriesLoading = false;
+        state.items = trackHistory;
+      })
+      .addCase(fetchTracksHistories.rejected, (state) => {
+        state.fetchTracksHistoriesLoading = false;
+      });
+  },
 });
 
 export const tracksHistoriesReducer = tracksHistoriesSlice.reducer;

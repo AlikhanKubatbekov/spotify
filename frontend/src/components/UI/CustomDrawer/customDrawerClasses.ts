@@ -33,11 +33,11 @@ const customDrawerClasses = {
     color: 'inherit',
     [darkTheme.breakpoints.only('xs')]: {
       display: 'none',
-    }
+    },
   },
   signUp: {
     color: 'inherit',
-    marginLeft: 'auto'
+    marginLeft: 'auto',
   },
   content: {
     flexGrow: 1,

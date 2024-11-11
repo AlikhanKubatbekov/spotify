@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import {Avatar, Box, Button, Container, Grid, Link, TextField, Typography} from '@mui/material';
-import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {RegisterMutation} from '../../types';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {selectRegisterError} from './usersSlice';
-import {register} from './usersThunk';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectRegisterError } from './usersSlice';
+import { register } from './usersThunk';
 import FileInput from '../../components/UI/FileInput/FileInput';
+import { RegisterMutation } from '../../types/user';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -15,24 +15,25 @@ const Register = () => {
     email: '',
     password: '',
     displayName: '',
-    avatar: null
+    avatar: null,
   });
 
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target;
-    setState(prevState => {
-      return {...prevState, [name]: value};
+    const { name, value } = event.target;
+    setState((prevState) => {
+      return { ...prevState, [name]: value };
     });
   };
 
   const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, files} = e.target;
+    const { name, files } = e.target;
     if (files) {
       setState((prevState) => ({
-        ...prevState, [name]: files[0]
+        ...prevState,
+        [name]: files[0],
       }));
     }
   };
@@ -40,12 +41,14 @@ const Register = () => {
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    await dispatch(register({
-      email: state.email.trim(),
-      password: state.password.trim(),
-      displayName: state.displayName.trim(),
-      avatar: state.avatar
-    })).unwrap();
+    await dispatch(
+      register({
+        email: state.email.trim(),
+        password: state.password.trim(),
+        displayName: state.displayName.trim(),
+        avatar: state.avatar,
+      }),
+    ).unwrap();
     navigate('/');
   };
 
@@ -67,13 +70,13 @@ const Register = () => {
           alignItems: 'center',
         }}
       >
-        <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-          <LockOutlinedIcon/>
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <Box component="form" noValidate onSubmit={submitFormHandler} sx={{mt: 3}}>
+        <Box component="form" noValidate onSubmit={submitFormHandler} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -113,19 +116,10 @@ const Register = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <FileInput
-                label="Avatar"
-                name="avatar"
-                onChange={fileInputChangeHandler}
-              />
+              <FileInput label="Avatar" name="avatar" onChange={fileInputChangeHandler} />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{mt: 3, mb: 2}}
-          >
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">

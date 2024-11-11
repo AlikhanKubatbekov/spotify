@@ -1,7 +1,7 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {Artist} from '../../types';
-import {fetchArtistById, fetchArtists} from './artistsThunk';
-import {RootState} from '../../app/store';
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchArtistById, fetchArtists } from './artistsThunk';
+import { RootState } from '../../app/store';
+import { Artist } from '../../types/artist';
 
 interface ArtistsState {
   items: Artist[];
@@ -14,7 +14,7 @@ const initialState: ArtistsState = {
   items: [],
   artist: null,
   fetchLoading: false,
-  fetchOneArtistLoading: false
+  fetchOneArtistLoading: false,
 };
 
 export const artistsSlice = createSlice({
@@ -22,24 +22,30 @@ export const artistsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchArtists.pending, (state) => {
-      state.fetchLoading = true;
-    }).addCase(fetchArtists.fulfilled, (state, {payload: artists}) => {
-      state.fetchLoading = false;
-      state.items = artists;
-    }).addCase(fetchArtists.rejected, (state) => {
-      state.fetchLoading = false;
-    });
+    builder
+      .addCase(fetchArtists.pending, (state) => {
+        state.fetchLoading = true;
+      })
+      .addCase(fetchArtists.fulfilled, (state, { payload: artists }) => {
+        state.fetchLoading = false;
+        state.items = artists;
+      })
+      .addCase(fetchArtists.rejected, (state) => {
+        state.fetchLoading = false;
+      });
 
-    builder.addCase(fetchArtistById.pending, (state) => {
-      state.fetchOneArtistLoading = true;
-    }).addCase(fetchArtistById.fulfilled, (state, {payload: artist}) => {
-      state.fetchOneArtistLoading = false;
-      state.artist = artist;
-    }).addCase(fetchArtistById.rejected, (state) => {
-      state.fetchOneArtistLoading = false;
-    });
-  }
+    builder
+      .addCase(fetchArtistById.pending, (state) => {
+        state.fetchOneArtistLoading = true;
+      })
+      .addCase(fetchArtistById.fulfilled, (state, { payload: artist }) => {
+        state.fetchOneArtistLoading = false;
+        state.artist = artist;
+      })
+      .addCase(fetchArtistById.rejected, (state) => {
+        state.fetchOneArtistLoading = false;
+      });
+  },
 });
 
 export const artistsReducer = artistsSlice.reducer;

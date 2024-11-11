@@ -7,7 +7,7 @@ interface Props {
   label: string;
 }
 
-const FileInput: React.FC<Props> = ({onChange, name, label}) => {
+const FileInput: React.FC<Props> = ({ onChange, name, label }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [filename, setFilename] = useState('');
@@ -30,25 +30,15 @@ const FileInput: React.FC<Props> = ({onChange, name, label}) => {
 
   return (
     <>
-      <input
-        style={{display: "none"}}
-        type="file"
-        name={name}
-        onChange={onFileChange}
-        ref={inputRef}
-      />
+      <input style={{ display: 'none' }} type="file" name={name} onChange={onFileChange} ref={inputRef} />
       <Grid container direction="row" spacing={2} alignItems="center">
         <Grid item xs>
-          <TextField
-            disabled
-            fullWidth
-            label={label}
-            value={filename}
-            onClick={activateInput}
-          />
+          <TextField disabled fullWidth label={label} value={filename} onClick={activateInput} />
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={activateInput}>Browse</Button>
+          <Button variant="contained" onClick={activateInput}>
+            Browse
+          </Button>
         </Grid>
       </Grid>
     </>

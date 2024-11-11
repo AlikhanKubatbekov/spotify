@@ -14,12 +14,12 @@ const albumItemClasses = {
   albumTitle: {
     display: 'inline-block',
     fontWeight: 'bold',
-    fontSize: "20px"
+    fontSize: '20px',
   },
   publicDate: {
     display: 'inline-block',
-    opacity: '0.5'
-  }
+    opacity: '0.5',
+  },
 };
 
 export default albumItemClasses;

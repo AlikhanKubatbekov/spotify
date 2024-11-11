@@ -1,5 +1,5 @@
 import darkTheme from '../../../theme';
-import {grey} from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 
 const tracksClasses = {
   gridContainer: {
@@ -25,7 +25,7 @@ const tracksClasses = {
     marginTop: darkTheme.spacing(0.5),
     fontWeight: 'bold',
     color: grey[500],
-  }
+  },
 };
 
 export default tracksClasses;

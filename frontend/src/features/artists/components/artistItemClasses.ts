@@ -13,7 +13,7 @@ const artistItemClasses = {
   },
   artistName: {
     fontWeight: 'bold',
-  }
+  },
 };
 
 export default artistItemClasses;
