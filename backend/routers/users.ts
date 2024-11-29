@@ -1,4 +1,4 @@
-import { Router, NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import { Error, mongo } from 'mongoose';
 import { OAuth2Client } from 'google-auth-library';
 import config from '../config';
@@ -8,12 +8,12 @@ import User from '../models/User';
 const usersRouter = Router();
 const client = new OAuth2Client(config.google.clientId);
 
-usersRouter.post('/', imagesUpload.single('avatar'), createUser);
+usersRouter.post('/', imagesUpload.single('avatar'), registerUser);
 usersRouter.post('/google', googleAuth);
 usersRouter.post('/sessions', loginUser);
 usersRouter.delete('/sessions', logoutUser);
 
-async function createUser(req: Request, res: Response, next: NextFunction) {
+async function registerUser(req: Request, res: Response, next: NextFunction) {
   try {
     const user = new User({
       email: req.body.email,
@@ -25,7 +25,8 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
     user.generateToken();
 
     await user.save();
-    return res.send(user);
+
+    return res.send({ message: 'Register successfully, welcome!', user });
   } catch (e) {
     if (e instanceof mongo.MongoServerError && e.code === 11000) {
       return res.status(422).send({ message: 'Email should be unique!' });
@@ -55,6 +56,7 @@ async function googleAuth(req: Request, res: Response, next: NextFunction) {
     const email = payload['email'];
     const id = payload['sub'];
     const displayName = payload['name'];
+    const avatar = payload['picture'];
 
     if (!email) {
       return res.status(400).send({ error: 'Not enough user data to continue' });
@@ -68,7 +70,7 @@ async function googleAuth(req: Request, res: Response, next: NextFunction) {
         password: crypto.randomUUID(),
         displayName,
         googleId: id,
-        avatar: null,
+        avatar,
       });
     }
 

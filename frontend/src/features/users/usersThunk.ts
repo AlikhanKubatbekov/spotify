@@ -49,10 +49,13 @@ export const login = createAsyncThunk<User, LoginMutation, { rejectValue: Global
   },
 );
 
-export const userLogout = createAsyncThunk<void, void, { state: RootState }>('users/logout', async (_, { dispatch }) => {
-  await axiosApi.delete('/users/sessions');
-  dispatch(unsetUser());
-});
+export const userLogout = createAsyncThunk<void, void, { state: RootState }>(
+  'users/logout',
+  async (_, { dispatch }) => {
+    await axiosApi.delete('/users/sessions');
+    dispatch(unsetUser());
+  },
+);
 
 export const googleLogin = createAsyncThunk<User, string, { rejectValue: GlobalError }>(
   'users/googleLogin',

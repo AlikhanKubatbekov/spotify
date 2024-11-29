@@ -7,6 +7,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import noAvatarAvailable from '../../../assets/noAvatarAvailable.png';
 import customDrawerClasses from './customDrawerClasses';
+import { apiURL } from '../../../constans';
 
 interface Props {
   handleUserLogout: () => void;
@@ -14,6 +15,8 @@ interface Props {
 
 const UserMenu: React.FC<Props> = ({ handleUserLogout }) => {
   const user = useAppSelector(selectUser);
+  let avatarImage = noAvatarAvailable;
+  if (user?.avatar) avatarImage = `${apiURL}/${user.avatar}`;
 
   return (
     <Typography
@@ -32,7 +35,7 @@ const UserMenu: React.FC<Props> = ({ handleUserLogout }) => {
           gap: '10px',
         }}
       >
-        <Avatar alt={user ? user.displayName : 'Anonymous user'} src={user?.avatar ?? noAvatarAvailable} />
+        <Avatar alt={user ? user.displayName : 'Anonymous user'} src={user?.googleId ? user?.avatar || undefined : avatarImage} />
         <Typography
           paragraph
           variant="h6"

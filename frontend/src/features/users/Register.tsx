@@ -7,6 +7,7 @@ import { selectRegisterError } from './usersSlice';
 import { register } from './usersThunk';
 import FileInput from '../../components/UI/FileInput/FileInput';
 import { RegisterMutation } from '../../types/user';
+import getFieldError from '../../helpers/getFieldError';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -52,14 +53,6 @@ const Register = () => {
     navigate('/');
   };
 
-  const getFieldError = (fieldName: string) => {
-    try {
-      return error?.errors[fieldName].message;
-    } catch {
-      return undefined;
-    }
-  };
-
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -86,8 +79,8 @@ const Register = () => {
                 autoComplete="off"
                 value={state.email}
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('email'))}
-                helperText={getFieldError('email')}
+                error={Boolean(getFieldError(error, 'email'))}
+                helperText={getFieldError(error, 'email')}
               />
             </Grid>
             <Grid item xs={12}>
@@ -99,8 +92,8 @@ const Register = () => {
                 autoComplete="off"
                 value={state.password}
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('password'))}
-                helperText={getFieldError('password')}
+                error={Boolean(getFieldError(error, 'password'))}
+                helperText={getFieldError(error, 'password')}
               />
             </Grid>
             <Grid item xs={12}>
@@ -111,8 +104,8 @@ const Register = () => {
                 autoComplete="off"
                 value={state.displayName}
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('displayName'))}
-                helperText={getFieldError('displayName')}
+                error={Boolean(getFieldError(error, 'displayName'))}
+                helperText={getFieldError(error, 'displayName')}
               />
             </Grid>
             <Grid item xs={12}>

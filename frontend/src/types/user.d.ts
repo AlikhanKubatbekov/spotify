@@ -5,6 +5,7 @@ export interface User {
   role: string;
   displayName: string;
   avatar: string | null;
+  googleId: string;
 }
 
 export interface RegisterMutation {
@@ -15,6 +16,7 @@ export interface RegisterMutation {
 }
 
 export interface RegisterResponse {
+  message: string;
   user: User;
 }
 
