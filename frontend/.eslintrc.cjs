@@ -9,4 +9,9 @@ module.exports = {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     semi: 'error',
   },
+  resolve: {
+    alias: {
+      '@mui/styled-engine': '@mui/styled-engine-sc',
+    },
+  },
 };

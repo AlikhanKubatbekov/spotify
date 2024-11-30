@@ -1,19 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Avatar, Button, Typography } from '@mui/material';
+import { Avatar, Typography } from '@mui/material';
 import { useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../../../features/users/usersSlice';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import noAvatarAvailable from '../../../assets/noAvatarAvailable.png';
-import customDrawerClasses from './customDrawerClasses';
 import { apiURL } from '../../../constans';
 
-interface Props {
-  handleUserLogout: () => void;
-}
-
-const UserMenu: React.FC<Props> = ({ handleUserLogout }) => {
+const UserMenu: React.FC = () => {
   const user = useAppSelector(selectUser);
   let avatarImage = noAvatarAvailable;
   if (user?.avatar) avatarImage = `${apiURL}/${user.avatar}`;
@@ -47,15 +39,6 @@ const UserMenu: React.FC<Props> = ({ handleUserLogout }) => {
           {user?.displayName}
         </Typography>
       </Typography>
-
-      <Button component={Link} sx={customDrawerClasses.recents} to="/track_history">
-        Recent
-        <MenuOutlinedIcon />
-      </Button>
-      <Button sx={customDrawerClasses.logout} onClick={handleUserLogout}>
-        Log out
-        <ExitToAppIcon />
-      </Button>
     </Typography>
   );
 };

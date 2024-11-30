@@ -73,7 +73,15 @@ const Login = () => {
         <Box component="form" onSubmit={submitFormHandler} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField fullWidth label="Email" name="email" autoComplete="off" value={state.email} onChange={inputChangeHandler} />
+              <TextField
+                fullWidth
+                label="Email"
+                name="email"
+                autoComplete="off"
+                value={state.email}
+                onChange={inputChangeHandler}
+                color={'success'}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -84,6 +92,7 @@ const Login = () => {
                 autoComplete="off"
                 value={state.password}
                 onChange={inputChangeHandler}
+                color={'success'}
               />
             </Grid>
           </Grid>

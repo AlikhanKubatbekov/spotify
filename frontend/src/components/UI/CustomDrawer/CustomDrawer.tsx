@@ -43,7 +43,7 @@ const CustomDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   return (
     <Typography component="div" style={{ display: 'flex' }}>
-      <TopNavigation handleDrawerToggle={handleDrawerToggle} handleUserLogout={handleUserLogout}>
+      <TopNavigation handleDrawerToggle={handleDrawerToggle}>
         {fetchArtistLoading && topNavigationLoadingBox}
         {fetchAlbumsLoading && topNavigationLoadingBox}
         {fetchTrackLoading && topNavigationLoadingBox}

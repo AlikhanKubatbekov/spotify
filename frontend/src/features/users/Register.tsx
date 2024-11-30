@@ -81,6 +81,7 @@ const Register = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError(error, 'email'))}
                 helperText={getFieldError(error, 'email')}
+                color={'success'}
               />
             </Grid>
             <Grid item xs={12}>
@@ -94,6 +95,7 @@ const Register = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError(error, 'password'))}
                 helperText={getFieldError(error, 'password')}
+                color={'success'}
               />
             </Grid>
             <Grid item xs={12}>
@@ -106,6 +108,7 @@ const Register = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError(error, 'displayName'))}
                 helperText={getFieldError(error, 'displayName')}
+                color={'success'}
               />
             </Grid>
             <Grid item xs={12}>

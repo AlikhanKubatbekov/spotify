@@ -18,20 +18,18 @@ const customDrawerClasses = {
   drawerPaper: {
     width: drawerWidth,
   },
-  menuButton: {
-    marginRight: darkTheme.spacing(2),
-    [darkTheme.breakpoints.up('sm')]: {
+  sideDrawerItem: {
+    [darkTheme.breakpoints.only('xs')]: {
       display: 'none',
     },
   },
-  recents: {
-    gap: '3px',
-    color: 'inherit',
+  drawerIcon: {
+    justifyContent: 'flex-end',
+    marginRight: '3px',
   },
-  logout: {
-    gap: '3px',
-    color: 'inherit',
-    [darkTheme.breakpoints.only('xs')]: {
+  menuButton: {
+    marginRight: darkTheme.spacing(2),
+    [darkTheme.breakpoints.up('sm')]: {
       display: 'none',
     },
   },

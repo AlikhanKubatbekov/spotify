@@ -10,10 +10,9 @@ import UserMenu from './UserMenu';
 interface Props {
   children?: ReactNode;
   handleDrawerToggle: () => void;
-  handleUserLogout: () => void;
 }
 
-const TopNavigation: React.FC<Props> = ({ children, handleDrawerToggle, handleUserLogout }) => {
+const TopNavigation: React.FC<Props> = ({ children, handleDrawerToggle }) => {
   const user = useAppSelector(selectUser);
 
   return (
@@ -23,7 +22,7 @@ const TopNavigation: React.FC<Props> = ({ children, handleDrawerToggle, handleUs
           <MenuIcon />
         </IconButton>
 
-        {user ? <UserMenu handleUserLogout={handleUserLogout} /> : <AnonymousMenu />}
+        {user ? <UserMenu /> : <AnonymousMenu />}
       </Toolbar>
       {children}
     </AppBar>
